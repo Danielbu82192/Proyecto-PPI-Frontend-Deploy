@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react-hooks/rules-of-hooks */
 "use client"
 import React, { useEffect, useState } from 'react';
@@ -5,7 +6,7 @@ import Crear from '@/component/asesorias/crear/crear';
 import CryptoJS from 'crypto-js';
 import { format } from 'date-fns';
 
-function page() {
+function page()  {
     const [fechaPruebas, setFechaPruebas] = useState(new Date());
     const dia = fechaPruebas.getDate()
     const monthIndex = fechaPruebas.getMonth();
@@ -45,7 +46,8 @@ function page() {
 
         obtenerHorasPendientes();
         cargarsemana()
-    }, []);
+    }, [fechaPruebas, validarHoras]);
+    
     const validarHoras = async () => {
         const usuarioNest = localStorage.getItem('U2FsdGVkX1');
         const bytes = CryptoJS.AES.decrypt(usuarioNest, 'PPIITYTPIJC');

@@ -754,7 +754,7 @@ function page({ params }) {
                                             <select value={observacion} onChange={(e) => { setObservacion(e.target.value); }} id="minutos" className="mt-1 w-full rounded-md border-gray-200 shadow-sm sm:text-sm">
                                                 <option value="-1">Seleccione el motivo</option>
                                                 {motivo.map((item) => (
-                                                    <option value={item.nombre}>{item.nombre}</option>
+                                                    <option key={item.id} value={item.nombre}>{item.nombre}</option>
                                                 ))}
                                             </select>
                                         </div>
