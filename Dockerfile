@@ -1,20 +1,23 @@
-# Base image
-FROM node:18
+# Usa una imagen de Node.js como base
+FROM node:latest
 
-# Create app directory
-WORKDIR /usr/src/app
+# Establece el directorio de trabajo en /app
+WORKDIR /app
 
-# A wildcard is used to ensure both package.json AND package-lock.json are copied
+# Copia el archivo package.json y package-lock.json (si existe) al directorio de trabajo
 COPY package*.json ./
 
-# Install app dependencies
+# Instala las dependencias del proyecto
 RUN npm install
 
-# Bundle app source
+# Copia el resto de los archivos al directorio de trabajo
 COPY . .
 
-# Creates a "dist" folder with the production build
+# Construye la aplicación
 RUN npm run build
 
-# Start the server using the production build
-CMD [ "node", "dist/main.js" ]
+# Expone el puerto en el que la aplicación se ejecutará dentro del contenedor (si es necesario)
+EXPOSE 3000
+
+# Comando para iniciar la aplicación cuando se ejecute el contenedor
+CMD ["npm", "start"]

@@ -59,7 +59,7 @@ const SlideBanner = () => {
     useEffect(() => {
         const fetchBanners = async () => {
             try {
-                const response = await fetch('http://localhost:3002/banner/tipo/1');
+                const response = await fetch('https://td-g-production.up.railway.app/banner/tipo/1');
                 const data = await response.json();
                 setBanners(data);
             } catch (error) {
@@ -106,8 +106,8 @@ const SlideBanner = () => {
         if (banners.length === 1) {
             return (
                 <>
-                    <img src={banners[0].urlImagen} className="object-cover min-w-[100%] rounded-lg" loading="eager" alt="" onClick={() => openModal(banners[0])} />
-                    {selectedBanner && NewModal(selectedBanner.contenidoBanner, selectedBanner.nombre, `http://localhost:3002${selectedBanner.urlImagen}`, true, closeModal)}
+                    <img src={`https://td-g-production.up.railway.app${banners[0].urlImagen}`} className="object-cover min-w-[100%] rounded-lg" loading="eager" alt="" onClick={() => openModal(banners[0])} />
+                    {selectedBanner && NewModal(selectedBanner.contenidoBanner, selectedBanner.nombre, `https://td-g-production.up.railway.app${selectedBanner.urlImagen}`, true, closeModal)}
                 </>
             )
         }
@@ -115,15 +115,15 @@ const SlideBanner = () => {
             <>
                 <Zoom {...zoomInPropieties}>
                     {banners.map((banner, index) => (
-                        <img key={index} src={`http://localhost:3002${banner.urlImagen}`} className="object-cover min-w-[100%]" loading="eager" alt="" onClick={() => openModal(banner)} />
+                        <img key={index} src={`https://td-g-production.up.railway.app${banner.urlImagen}`} className="object-cover min-w-[100%]" loading="eager" alt="" onClick={() => openModal(banner)} />
                     ))}
                 </Zoom>
-                {selectedBanner && NewModal(selectedBanner.contenidoBanner, selectedBanner.nombre, `http://localhost:3002${selectedBanner.urlImagen}`, true, closeModal)}
+                {selectedBanner && NewModal(selectedBanner.contenidoBanner, selectedBanner.nombre, `https://td-g-production.up.railway.app${selectedBanner.urlImagen}`, true, closeModal)}
             </>
         );
     } else {
         return (
-            <img className='w-[100%] m-4 rounded-lg' src="https://www.politecnicojic.edu.co/images/logo/logo-negro.png" alt="" />
+            <img className='w-auto m-4 rounded-lg' src="https://www.politecnicojic.edu.co/images/logo/logo-negro.png" alt="" />
         )
     }
 };
@@ -135,7 +135,7 @@ const SlideNewsCard = () => {
     useEffect(() => {
         const fetchNews = async () => {
             try {
-                const response = await fetch('http://localhost:3002/banner/tipo/2');
+                const response = await fetch('https://td-g-production.up.railway.app/banner/tipo/2');
                 const data = await response.json();
                 setNews(data);
             } catch (error) {
@@ -158,14 +158,14 @@ const SlideNewsCard = () => {
                     }}
                 >
                     {news.map((each, index) => (
-                        <NewCard key={index} newTitle={each.contenidoBanner} newContent={each.nombre} newImage={`http://localhost:3002${each.urlImagen}`} />
+                        <NewCard key={index} newTitle={each.contenidoBanner} newContent={each.nombre} newImage={`https://td-g-production.up.railway.app${each.urlImagen}`} />
                     ))}
                 </div>
             </div>
         )
     } else {
         return (
-            <div className="">
+            <div className="flex flex-row justify-center">
                 No hay novedades en el momento!
             </div>
         )

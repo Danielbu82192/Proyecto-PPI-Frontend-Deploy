@@ -26,7 +26,7 @@ function crear() {
     const [diaLunes, setDiaLunes] = useState('');
     const [showCitasPendientes, setShowCitasPendientes] = useState(false)
     const [diasNumero, setDiaNumero] = useState([]);
-    const [fechaPruebas, setFechaPruebas] = useState(new Date());
+    const [fechaPruebas, setFechaPruebas] = useState(new Date("05/24/2024"));
     const [citasPendientes, setCitasPendientes] = useState([])
     const [horasPendientes, setHorasPendientes] = useState('');
     const [diasConst, setDiasConst] = useState(['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'])
@@ -97,29 +97,6 @@ function crear() {
 
 
 
-    useEffect(() => {
-        setDiaNumero([])
-        diasConst.map((item, index) => {
-            if ((diaSemana - 1) <= index) {
-                setDiaNumero(prevState => [...prevState, item + ' ' + (diaLunes + index)])
-            }
-        });
-        if (fechaPruebas.getDay() >= 4) {
-            setSiguienteSemana([])
-            let dia = ((7 - fechaPruebas.getDay()) + fechaPruebas.getDate() + 1)
-            for (let index = 0; index < diasConst.length; index++) {
-                setSiguienteSemana(prevState => [...prevState, diasConst[index] + ' ' + (dia + index)])
-            }
-        }
-    }, [diaLunes, diasConst, diaSemana]);
-
-    useEffect(() => {
-        if (horaSeleccionadas.length !== 0) {
-            setEstadoCrear(true);
-        } else {
-            setEstadoCrear(false);
-        }
-    }, [horaSeleccionadas]);
 
     const cambiaDia = (item, index) => {
         horaSeleccionadas.map((item) => {
@@ -151,7 +128,7 @@ function crear() {
     }
 
     const validarHoras = async (cantHoras) => {
-        const response = await fetch('http://localhost:3002/hora-semanal/profesor/' + usuarioActual.id);
+        const response = await fetch('https://td-g-production.up.railway.app/hora-semanal/profesor/' + usuarioActual.id);
         const data = await response.json();
         if (response.ok) {
             const horasAsignadas = data[0].horasAsignadas;
@@ -165,7 +142,7 @@ function crear() {
             fechaSabado.setDate(fechaActual.getDate() - (fechaActual.getDay() - 7)); // Establece la fecha al próximo lunes
             const fechaInicio = fechaLunes.toISOString().split('T')[0];
             const fechaFin = fechaSabado.toISOString().split('T')[0];
-            const response2 = await fetch(`http://localhost:3002/citas-asesoria-ppi/${fechaInicio}/${fechaFin}/` + usuarioActual.id);
+            const response2 = await fetch(`https://td-g-production.up.railway.app/citas-asesoria-ppi/${fechaInicio}/${fechaFin}/` + usuarioActual.id);
             const data2 = await response2.json();
             if (response2.ok) {
                 const asesoriasActual = data2.length + cantHoras;
@@ -205,7 +182,7 @@ function crear() {
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify(datos)
                     };
-                    const response = await fetch('http://localhost:3002/citas-asesoria-ppi', requestOptions);
+                    const response = await fetch('https://td-g-production.up.railway.app/citas-asesoria-ppi', requestOptions);
                     if (response.ok) {
                         estado = true;
 
@@ -231,7 +208,7 @@ function crear() {
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(datos)
                 };
-                const response = await fetch('http://localhost:3002/notificaciones', requestOptions);
+                const response = await fetch('https://td-g-production.up.railway.app/notificaciones', requestOptions);
 
                 setShowCorrecto(true);
                 setHoraSeleccionadas([]);
@@ -262,7 +239,7 @@ function crear() {
         }
         const fechaInicio = format(fechaLunes, "MM-dd-yyyy");
         const fechaFin = format(fechaSabado, "MM-dd-yyyy");
-        const response = await fetch(`http://localhost:3002/citas-asesoria-ppi/${fechaInicio}/${fechaFin}/${usuarioActual.id}`);
+        const response = await fetch(`https://td-g-production.up.railway.app/citas-asesoria-ppi/${fechaInicio}/${fechaFin}/${usuarioActual.id}`);
         const data = await response.json();
         if (response.ok) {
             setLabelCheck([])
@@ -319,7 +296,7 @@ function crear() {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(dataCrearMeet)
             };
-            const responseMeet = await fetch('http://localhost:3002/google/create-event/', requestOptionsMEET);
+            const responseMeet = await fetch('https://td-g-production.up.railway.app/google/create-event/', requestOptionsMEET);
             if (!responseMeet.ok) {
                 setShowError(true)
                 return
@@ -339,7 +316,7 @@ function crear() {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(datos)
             };
-            const response = await fetch('http://localhost:3002/citas-asesoria-ppi/' + item.id, requestOptions);
+            const response = await fetch('https://td-g-production.up.railway.app/citas-asesoria-ppi/' + item.id, requestOptions);
             if (true) {
                 let numSemana = 0
                 for (let i = 0; i < semanas.length; i++) {
@@ -368,7 +345,7 @@ function crear() {
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(datosSeguimiento)
                 };
-                const responseSeguimiento = await fetch('http://localhost:3002/seguimiento-ppi/', requestOptionsSeguimiento);
+                const responseSeguimiento = await fetch('https://td-g-production.up.railway.app/seguimiento-ppi/', requestOptionsSeguimiento);
                 if (responseSeguimiento.ok) {
                     setShowCorrecto(true)
                     setShowCitasPendientes(false);
@@ -403,7 +380,7 @@ function crear() {
             fechaSabado.setDate(fechaActual.getDate() - (fechaActual.getDay() - 7));
             const fechaInicio = format(fechaLunes, "yyyy-MM-dd")
             const fechaFin = format(fechaSabado, "yyyy-MM-dd")
-            const response = await fetch(`http://localhost:3002/citas-asesoria-ppi/${fechaInicio}/${fechaFin}/` + usuarioN.id);
+            const response = await fetch(`https://td-g-production.up.railway.app/citas-asesoria-ppi/${fechaInicio}/${fechaFin}/` + usuarioN.id);
             const data = await response.json();
             if (response.ok) {
                 const registrosFiltrados = data.filter(registro => registro.estadoCita.id === 6);
@@ -416,14 +393,14 @@ function crear() {
             }
         }
         const semanas = async () => {
-            const response = await fetch('http://localhost:3002/semanas');
+            const response = await fetch('https://td-g-production.up.railway.app/semanas');
             const data = await response.json();
             if (response.ok) {
                 setSemanas(data)
             }
         }
         const buscarEstudiantes = async () => {
-            const response = await fetch(`http://localhost:3002/equipo-usuarios/estudiantes`);
+            const response = await fetch(`https://td-g-production.up.railway.app/equipo-usuarios/estudiantes`);
             const data = await response.json();
             if (response.ok) {
                 setEstudiantes(data);
@@ -452,6 +429,30 @@ function crear() {
             return () => clearTimeout(timer);
         }
     }, [showCorrecto]);
+    
+    useEffect(() => {
+        setDiaNumero([])
+        diasConst.map((item, index) => {
+            if ((diaSemana - 1) <= index) {
+                setDiaNumero(prevState => [...prevState, item + ' ' + (diaLunes + index)])
+            }
+        });
+        if (fechaPruebas.getDay() >= 4) {
+            setSiguienteSemana([])
+            let dia = ((7 - fechaPruebas.getDay()) + fechaPruebas.getDate() + 1)
+            for (let index = 0; index < diasConst.length; index++) {
+                setSiguienteSemana(prevState => [...prevState, diasConst[index] + ' ' + (dia + index)])
+            }
+        }
+    }, [diaLunes, diasConst, diaSemana]);
+
+    useEffect(() => {
+        if (horaSeleccionadas.length !== 0) {
+            setEstadoCrear(true);
+        } else {
+            setEstadoCrear(false);
+        }
+    }, [horaSeleccionadas]);
     return (
         <div>
 

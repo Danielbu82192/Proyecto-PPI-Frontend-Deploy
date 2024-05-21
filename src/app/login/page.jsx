@@ -26,12 +26,12 @@ function page() {
     useEffect(() => {
         const cerrarSesion = async () => {
 
-            const response = await fetch(`http://localhost:3002/google/check-session`);
+            const response = await fetch(`https://td-g-production.up.railway.app/google/check-session`);
             if (response.ok) {
                 const data = await response.json()
                 setEstadoSesion(data.isSessionActive)
                 if (data.isSessionActive) {
-                    const response2 = await fetch(`http://localhost:3002/google/logout`);
+                    const response2 = await fetch(`https://td-g-production.up.railway.app/google/logout`);
                     localStorage.removeItem('U2FsdGVkX1');
                     localStorage.removeItem('U2FsdGVkX2');
                 }
@@ -42,7 +42,7 @@ function page() {
 
     const crearVariablesSesion = async (datosGoogle) => {
         try {
-            const response2 = await fetch('http://localhost:3002/usuario/correos/' + datosGoogle.email);
+            const response2 = await fetch('https://td-g-production.up.railway.app/usuario/correos/' + datosGoogle.email);
             const usuario = await response2.json();
             console.log(usuario)
             if (response2.ok && usuario.length != 0) {
@@ -54,7 +54,7 @@ function page() {
                      headers: { 'Content-Type': 'application/json' },
                      body: JSON.stringify(datos)
                  };
-                 const response = await fetch('http://localhost:3002/usuario/correo/' + datosGoogle.email, requestOptions);
+                 const response = await fetch('https://td-g-production.up.railway.app/usuario/correo/' + datosGoogle.email, requestOptions);
                  */
                 const googleCifrado = CryptoJS.AES.encrypt(JSON.stringify(datosGoogle), 'PPIITYTPIJC').toString();
                 const nestCifrado = CryptoJS.AES.encrypt(JSON.stringify(usuario), 'PPIITYTPIJC').toString();
@@ -72,7 +72,7 @@ function page() {
 
     const handleLogin = async () => {
         if (!estadoSesion) {
-            const response2 = await fetch(`http://localhost:3002/google/auth/url`);
+            const response2 = await fetch(`https://td-g-production.up.railway.app/google/auth/url`);
             const data2 = await response2.json()
             const popupWindow = window.open(data2.url, 'popupWindow', 'width=600,height=600');
             if (popupWindow) {
@@ -81,7 +81,7 @@ function page() {
                 const checkClosed = setInterval(async () => {
                     if (popupWindow.closed) {
                         clearInterval(checkClosed);
-                        const response2 = await fetch(`http://localhost:3002/google/user-info`);
+                        const response2 = await fetch(`https://td-g-production.up.railway.app/google/user-info`);
                         if (response2.ok) {
                             const data2 = await response2.json()
                             crearVariablesSesion(data2)
@@ -90,10 +90,10 @@ function page() {
                 }, 1000);
 
             } else {
-                alert('El navegador bloqueó la apertura de la ventana emergente. Por favor, habilite las ventanas emergentes para este sitio web.');
+                //alert('El navegador bloqueó la apertura de la ventana emergente. Por favor, habilite las ventanas emergentes para este sitio web.');
             }
         } else {
-            const response2 = await fetch(`http://localhost:3002/google/logout`);
+            const response2 = await fetch(`https://td-g-production.up.railway.app/google/logout`);
 
         }
 

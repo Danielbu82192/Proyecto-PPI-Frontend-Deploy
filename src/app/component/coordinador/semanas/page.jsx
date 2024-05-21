@@ -4,8 +4,8 @@ import { format } from 'date-fns'
 import React, { useState, useEffect } from 'react'
 
 function page() {
-    const [fechaInicio, setFechaInicio] = useState(('2024-02-04'))
-    const [fechaFin, setFechaFin] = useState(('2024-06-09'))
+    const [fechaInicio, setFechaInicio] = useState("-1")//'2024-02-04'
+    const [fechaFin, setFechaFin] = useState("-1")//'2024-06-09'
     const [semanas, setSemanas] = useState([])
     const [semanasActual, setSemanasActual] = useState([])
     const [edicionHabilitada, setEdicionHabilitada] = useState([]);
@@ -21,6 +21,9 @@ function page() {
     };
 
     const calcularSemanas = () => {
+        if(fechaInicio=="-1" && fechaFin=="-1"){
+            return;
+        }
         const fechaInicioParts = fechaInicio.split('-');
         const fechafinParts = fechaFin.split('-');
         const fechaAuxInicio = new Date(fechaInicioParts[0], fechaInicioParts[1] - 1, fechaInicioParts[2]);
@@ -58,6 +61,7 @@ function page() {
     };
 
     const modificarSemana = (actual, value, index, item) => {
+       
         const fecha = value.split('-');
         const fechaAux = new Date(fecha[0], fecha[1] - 1, fecha[2]);
         /*if (actual > fechaAux) {
@@ -108,11 +112,11 @@ function page() {
             return () => clearTimeout(timer);
         }
     }, [showError]);
-    //http://localhost:3002/semanas
+    //https://td-g-production.up.railway.app/semanas
     useEffect(() => {
         const traerSemanas = async () => {
             try {
-                const response = await fetch('http://localhost:3002/semanas');
+                const response = await fetch('https://td-g-production.up.railway.app/semanas');
                 const data = await response.json()
                 setSemanasActual(data)
                 console.log(data)
@@ -128,7 +132,7 @@ function page() {
             method: 'DELETE',
             headers: { 'Content-Type': 'application/json' },
         };
-        const response = await fetch('http://localhost:3002/semanas/eliminarTodo/', requestOptions);
+        const response = await fetch('https://td-g-production.up.railway.app/semanas/eliminarTodo/', requestOptions);
         if (!response.ok)
             return
         for (let index = 0; index < semanas.length; index++) {
@@ -143,13 +147,16 @@ function page() {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(datos)
             };
-            const response = await fetch('http://localhost:3002/semanas', requestOptions);
+            const response = await fetch('https://td-g-production.up.railway.app/semanas', requestOptions);
             if (response.ok) {
                 cont++;
             }
         }
         if (cont == semanas.length) {
             setShowCorrecto(true)
+            setTimeout(() => {
+                window.location.reload();
+            }, 2000);
         }
 
     }

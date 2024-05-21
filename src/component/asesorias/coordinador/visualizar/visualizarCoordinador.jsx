@@ -15,10 +15,10 @@ function visualizarCoordinador() {
 
     useEffect(() => {
         const cargarCitas = async () => {
-            const response = await fetch(`http://localhost:3002/citas-asesoria-ppi/`);
+            const response = await fetch(`https://td-g-production.up.railway.app/citas-asesoria-ppi/`);
             const data = await response.json();
             if (response.ok) {
-                const response2 = await fetch(`http://localhost:3002/equipo-usuarios/Estudiantes/`);
+                const response2 = await fetch(`https://td-g-production.up.railway.app/equipo-usuarios/Estudiantes/`);
                 const data2 = await response2.json();
                 if (response2.ok) {
                     for (const element of data) {
@@ -34,7 +34,7 @@ function visualizarCoordinador() {
         }
 
         const cargarsemana = async () => {
-            const response = await fetch(`http://localhost:3002/semanas`);
+            const response = await fetch(`https://td-g-production.up.railway.app/semanas`);
             const data = await response.json();
             if (response.ok) {
                 setSeleccionada(data)

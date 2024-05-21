@@ -12,11 +12,13 @@ function page({ params }) {
     const [profesor, setProfesor] = useState([]);
     const [equipo, setEquipo] = useState([]);
     const [showCorrecto, setShowCorrecto] = useState(false);
+    const [showNoCancelar, setShowNoCancelar] = useState(false);
     const [estadoCita, setEstadoCita] = useState([]);
     const [tipoCita, setTipoCita] = useState([]);
     const [fecha, setFecha] = useState('');
     const [hora, setHora] = useState('');
     const [salon, setSalon] = useState('');
+    const [fechaPruebas, setFechaPruebas] = useState(new Date());
     const router = useRouter();
     const [showAlertDelete, setShowAlertDelete] = useState(false);
     const [CancelId, setCancelId] = useState('');
@@ -53,7 +55,7 @@ function page({ params }) {
     useEffect(() => {
         const traerCita = async () => {
             if (params.estado != '4') {
-                const response = await fetch(`http://localhost:3002/citas-asesoria-ppi/${params.id}`);
+                const response = await fetch(`https://td-g-production.up.railway.app/citas-asesoria-ppi/${params.id}`);
                 const data = await response.json();
                 if (response.ok) {
                     setCita(data)
@@ -63,7 +65,7 @@ function page({ params }) {
                     setFecha(formatDate(data.fecha))
                     setTipoCita(data.tipoCita)
                     setProfesor(data.usuariocitaequipo)
-                    const response2 = await fetch(`http://localhost:3002/hora-semanal/profesor/${data.usuariocitaequipo.id}`);
+                    const response2 = await fetch(`https://td-g-production.up.railway.app/hora-semanal/profesor/${data.usuariocitaequipo.id}`);
                     const data2 = await response2.json();
                     setSalon(data2[0].salon)
                 }
@@ -71,7 +73,7 @@ function page({ params }) {
                 const usuarioNest = localStorage.getItem('U2FsdGVkX1');
                 const bytes = CryptoJS.AES.decrypt(usuarioNest, 'PPIITYTPIJC');
                 const usuarioN = JSON.parse(bytes.toString(CryptoJS.enc.Utf8))
-                const response = await fetch('http://localhost:3002/equipo-ppi/equipo/' + usuarioN.usuario[0].codigoEquipo);
+                const response = await fetch('https://td-g-production.up.railway.app/equipo-ppi/equipo/' + usuarioN.usuario[0].codigoEquipo);
                 const data = await response.json();
                 if (response.ok) {
                     const canceladas = data.canceladas;
@@ -94,6 +96,15 @@ function page({ params }) {
 
     const cancelarCita = async (id, idCalendar, causeInput) => {
 
+        const fechaActual = new Date(fechaPruebas) 
+        if (fechaActual.getDate() == fecha.split("/")[0]) {
+            const horaCita = (parseInt(hora.split(":")[0]) * 60) + parseInt(hora.split(":")[1])
+            const horaActual = (parseInt(fechaActual.getHours()+2) * 60) + parseInt(fechaActual.getMinutes())
+            if (horaCita - horaActual < 0) {
+                setShowNoCancelar(true)
+                return
+            }
+        } 
         const dataCrearMeet = {
             "eventId": idCalendar,
             "cause": causeInput
@@ -103,7 +114,7 @@ function page({ params }) {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(dataCrearMeet)
         };
-        const responseMeet = await fetch('http://localhost:3002/google/delete-event/', requestOptionsMEET);
+        const responseMeet = await fetch('https://td-g-production.up.railway.app/google/delete-event/', requestOptionsMEET);
         if (!responseMeet.ok) {
             setShowAlert(true)
             return
@@ -148,8 +159,8 @@ function page({ params }) {
 
         try {
             const [responseCita, responseEquipo] = await Promise.allSettled([
-                fetch('http://localhost:3002/citas-asesoria-ppi/' + id, requestOptionsCita),
-                fetch('http://localhost:3002/equipo-ppi/1', requestOptionsEquipo)
+                fetch('https://td-g-production.up.railway.app/citas-asesoria-ppi/' + id, requestOptionsCita),
+                fetch('https://td-g-production.up.railway.app/equipo-ppi/' + cita.equipocita.id, requestOptionsEquipo)
             ]);
 
             if (responseCita.status === 'fulfilled' && responseEquipo.status === 'fulfilled') {
@@ -175,8 +186,17 @@ function page({ params }) {
         }
     }, [showCorrecto]);
 
+    useEffect(() => {
+        if (showNoCancelar) {
+            const timer = setTimeout(() => {
+                setShowNoCancelar(false);
+            }, 2000);
+
+            return () => clearTimeout(timer);
+        }
+    }, [showNoCancelar]);
     const verAsesoria = async (id) => {
-        const response = await fetch('http://localhost:3002/seguimiento-ppi/Cita/' + id);
+        const response = await fetch('https://td-g-production.up.railway.app/seguimiento-ppi/Cita/' + id);
         const data = await response.json();
         router.push('/component/seguimientos/visualizar/' + data.id);
     }
@@ -277,7 +297,7 @@ function page({ params }) {
 
                             ) : estadoCita.id == 5 ? (
                                 <div className="flex justify-center">
-                                    <button onClick={() => { router.push('/component/asesorias/visualizar/estudiante/' + cita.modificaciones + '/6/'+params.esdutiante); }} class="text-white h-14 py-2 px-4 w-full rounded bg-orange-400 hover:bg-orange-500 shadow hover:shadow-lg font-medium transition transform hover:-translate-y-0.5 min-w-[250px] max-w-[250px]">Nueva cita</button>
+                                    <button onClick={() => { router.push('/component/asesorias/visualizar/estudiante/' + cita.modificaciones + '/6/' + params.esdutiante); }} class="text-white h-14 py-2 px-4 w-full rounded bg-orange-400 hover:bg-orange-500 shadow hover:shadow-lg font-medium transition transform hover:-translate-y-0.5 min-w-[250px] max-w-[250px]">Nueva cita</button>
                                 </div>
                             ) : (<div className='pb-5'></div>)
                             }
@@ -322,6 +342,26 @@ function page({ params }) {
                         <div className="px-4 py-6 bg-white rounded-r-lg flex justify-between items-center w-full border border-l-transparent border-gray-200">
                             <div>Error al cancelar</div>
                             <button onClick={() => { setShowAlert(!showAlert) }}>
+                                <svg xmlns="http://www.w3.org/2000/svg" className="fill-current text-gray-700" viewBox="0 0 16 16" width="20" height="20">
+                                    <path fillRule="evenodd" d="M3.72 3.72a.75.75 0 011.06 0L8 6.94l3.22-3.22a.75.75 0 111.06 1.06L9.06 8l3.22 3.22a.75.75 0 11-1.06 1.06L8 9.06l-3.22 3.22a.75.75 0 01-1.06-1.06L6.94 8 3.72 4.78a.75.75 0 010-1.06z"></path>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {showNoCancelar && (
+                <div className="fixed bottom-0 right-0 mb-8 mr-8">
+                    <div className="flex w-96 shadow-lg rounded-lg">
+                        <div className="bg-red-600 py-4 px-6 rounded-l-lg flex items-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" className="fill-current text-white" width="20" height="20">
+                                <path fillRule="evenodd" d="M4.47.22A.75.75 0 015 0h6a.75.75 0 01.53.22l4.25 4.25c.141.14.22.331.22.53v6a.75.75 0 01-.22.53l-4.25 4.25A.75.75 0 0111 16H5a.75.75 0 01-.53-.22L.22 11.53A.75.75 0 010 11V5a.75.75 0 01.22-.53L4.47.22zm.84 1.28L1.5 5.31v5.38l3.81 3.81h5.38l3.81-3.81V5.31L10.69 1.5H5.31zM8 4a.75.75 0 01.75.75v3.5a.75.75 0 01-1.5 0v-3.5A.75.75 0 018 4zm0 8a1 1 0 100-2 1 1 0 000 2z"></path>
+                            </svg>
+                        </div>
+                        <div className="px-4 py-6 bg-white rounded-r-lg flex justify-between items-center w-full border border-l-transparent border-gray-200">
+                            <div>La cita se debe cancelar con 2 horas de anticipación.</div>
+                            <button onClick={() => { setShowNoCancelar(!showNoCancelar) }}>
                                 <svg xmlns="http://www.w3.org/2000/svg" className="fill-current text-gray-700" viewBox="0 0 16 16" width="20" height="20">
                                     <path fillRule="evenodd" d="M3.72 3.72a.75.75 0 011.06 0L8 6.94l3.22-3.22a.75.75 0 111.06 1.06L9.06 8l3.22 3.22a.75.75 0 11-1.06 1.06L8 9.06l-3.22 3.22a.75.75 0 01-1.06-1.06L6.94 8 3.72 4.78a.75.75 0 010-1.06z"></path>
                                 </svg>

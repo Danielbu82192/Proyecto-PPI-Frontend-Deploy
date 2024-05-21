@@ -10,7 +10,7 @@ function page({ params }) {
 
     useEffect(() => {
         const fechData = async () => {
-            const response = await fetch('http://localhost:3002/estado-seguimiento-cambio/id/' + params.idB);
+            const response = await fetch('https://td-g-production.up.railway.app/estado-seguimiento-cambio/id/' + params.idB);
             const data = await response.json();
             if (response.ok) {
                 setEstado(data.estadoSeguimiento);

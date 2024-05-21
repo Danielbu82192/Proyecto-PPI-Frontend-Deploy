@@ -7,7 +7,7 @@ function page() {
 
     useEffect(() => {
         const traerSesion = async () => {
-            const response = await fetch('http://localhost:3002/usuario/ExisteSesion');
+            const response = await fetch('https://td-g-production.up.railway.app/usuario/ExisteSesion');
             if (response.ok) {
                 const data = await response.json();
                 console.log(data)

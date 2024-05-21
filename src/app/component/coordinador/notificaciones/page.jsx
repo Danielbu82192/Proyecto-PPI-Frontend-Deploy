@@ -15,7 +15,7 @@ function page() {
             method: 'DELETE',
             headers: { 'Content-Type': 'application/json' }
         };
-        const response = await fetch('http://localhost:3002/notificaciones/' + id, requestOptions);
+        const response = await fetch('https://td-g-production.up.railway.app/notificaciones/' + id, requestOptions);
         if (response.ok) {
             setShowCorrecto(true)
             setTimeout(() => {
@@ -26,7 +26,7 @@ function page() {
 
     useEffect(() => {
         const notificaciones = async () => {
-            const response = await fetch('http://localhost:3002/notificaciones/');
+            const response = await fetch('https://td-g-production.up.railway.app/notificaciones/');
             const data = await response.json();
             if (response.ok) {
                 console.log(data)
@@ -56,7 +56,7 @@ function page() {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(datos)
         };
-        const response = await fetch('http://localhost:3002/notificaciones/' + id, requestOptions);
+        const response = await fetch('https://td-g-production.up.railway.app/notificaciones/' + id, requestOptions);
         if (response.ok) {
             if (tipo == 1) {
                 router.push('/component/coordinador/horasAsesores/' + asesor);

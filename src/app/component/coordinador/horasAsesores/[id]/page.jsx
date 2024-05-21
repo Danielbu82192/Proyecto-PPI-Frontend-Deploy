@@ -16,8 +16,7 @@ function page({ params }) {
     const [citas, setCitas] = useState([])
     const [filtroRadio, setFiltroRario] = useState(false)
     const [currentPage, setCurrentPage] = useState(0);
-    const [semanaSeleccionada, setSemanaSeleccionada] = useState([])
-    //http://localhost:3002/citas-asesoria-ppi/asesor/
+    const [semanaSeleccionada, setSemanaSeleccionada] = useState([]) 
 
     const capitalizeFirstLetter = (str) => {
         return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
@@ -160,7 +159,7 @@ function page({ params }) {
 
     useEffect(() => {
         const cargarAsesor = async () => {
-            const response = await fetch('http://localhost:3002/usuario/' + params.id);
+            const response = await fetch('https://td-g-production.up.railway.app/usuario/' + params.id);
             const data = await response.json()
             if (response.ok) {
                 setAsesor(data)
@@ -169,7 +168,7 @@ function page({ params }) {
 
 
 
-            const response3 = await fetch('http://localhost:3002/semanas');
+            const response3 = await fetch('https://td-g-production.up.railway.app/semanas');
             const data3 = await response3.json()
             let fechaSelec = []
             for (let index = 0; index < data3.length; index++) {
@@ -184,7 +183,7 @@ function page({ params }) {
             }
             setSemana(data3)
 
-            const response2 = await fetch('http://localhost:3002/citas-asesoria-ppi/asesor/' + params.id);
+            const response2 = await fetch('https://td-g-production.up.railway.app/citas-asesoria-ppi/asesor/' + params.id);
             const data2 = await response2.json()
             if (response2.ok) {
                 const auxiliar = []
@@ -198,10 +197,11 @@ function page({ params }) {
                 }
                 setCitas(data2)
                 setAuxCitas(auxiliar)
+                setAuxCitasSemanas(data2)
             }
         }
         const fetchData = async () => {
-            const response2 = await fetch('http://localhost:3002/equipo-usuarios/Estudiantes');
+            const response2 = await fetch('https://td-g-production.up.railway.app/equipo-usuarios/Estudiantes');
             const data2 = await response2.json();
             if (response2.ok) {
                 setEstudiantes(data2); 
@@ -226,78 +226,10 @@ function page({ params }) {
                         <h1 className="text-3xl font-bold text-gray-600 pl-5">Citas Semanales:</h1>
                         <span className="text-3xl text-gray-500 font-semibold pr-3 pl-1">
                             {horas.horasAsignadas * 3}
-                        </span>
+                        </span> 
                     </div>
                 </div>
                 <div className='p-10'>
-                    {/*<div className='grid grid-cols-2'>
-                        <div className="text-center">
-                            <div>
-                                <h1 className="text-2xl sm:text-xl font-bold text-gray-600">Asesor:</h1>
-                            </div>
-                            <div>
-                                <span className="inline-block text-2xl text-gray-500 sm:mt-2 ml-2 sm:ml-4 font-semibold px-2 sm:px-3   ">
-                                    {asesor.nombre}
-                                </span>
-                            </div>
-                        </div>
-                        <div className="text-center">
-                            <div>
-                                <h1 className="text-2xl sm:text-xl font-bold text-gray-600">Doumento:</h1>
-                            </div>
-                            <div>
-                                <span className="inline-block text-2xl text-gray-500 sm:mt-2 ml-2 sm:ml-4 font-semibold px-2 sm:px-3   ">
-                                    {asesor.documento}
-                                </span>
-                            </div>
-                        </div>
-    </div>
-                    <div className='grid grid-cols-2 mt-5' >
-                        <div className="text-center">
-                            <div>
-                                <h1 className="text-2xl sm:text-xl font-bold text-gray-600">Correo:</h1>
-                            </div>
-                            <div>
-                                <span className="inline-block text-2xl text-gray-500 sm:mt-2 ml-2 sm:ml-4 font-semibold px-2 sm:px-3   ">
-                                    {asesor.correo}
-                                </span>
-                            </div>
-                        </div>
-                        <div className="text-center">
-                            <div>
-                                <h1 className="text-2xl sm:text-xl font-bold text-gray-600">Salon:</h1>
-                            </div>
-                            <div>
-                                <span className="inline-block text-2xl text-gray-500 sm:mt-2 ml-2 sm:ml-4 font-semibold px-2 sm:px-3   ">
-                                    {horas.salon}
-                                </span>
-                            </div>
-                        </div>
-                    </div>
-                    <div className='grid grid-cols-2 mt-5 '>
-                        <div className="text-center">
-                            <div>
-                                <h1 className="text-2xl sm:text-xl font-bold text-gray-600">Horas Semanales:</h1>
-                            </div>
-                            <div>
-                                <span className="inline-block text-2xl text-gray-500 sm:mt-2 ml-2 sm:ml-4 font-semibold px-2 sm:px-3   ">
-                                    {horas.horasAsignadas}
-                                </span>
-                            </div>
-                        </div>
-                        <div className="text-center">
-                            <div>
-                                <h1 className="text-2xl sm:text-xl font-bold text-gray-600">Citas Semanales:</h1>
-                            </div>
-                            <div>
-                                <span className="inline-block text-2xl text-gray-500 sm:mt-2 ml-2 sm:ml-4 font-semibold px-2 sm:px-3   ">
-                                    {horas.horasAsignadas * 3}
-                                </span>
-                            </div>
-                        </div>
-
-                    </div>
-*/}
                     <div className=''>
                         <div className="text-center">
                             {semanaSeleccionada != null ? (

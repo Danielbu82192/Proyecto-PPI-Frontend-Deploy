@@ -64,7 +64,7 @@ function page({ params }) {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await fetch(`http://localhost:3002/citas-asesoria-ppi/${params.id}`);
+                const response = await fetch(`https://td-g-production.up.railway.app/citas-asesoria-ppi/${params.id}`);
                 const data = await response.json();
                 setCita(data);
                 setCitaEstado(data.estadoCita)
@@ -75,7 +75,7 @@ function page({ params }) {
                 setSelectEstado(data.estadoCita.id)
                 setNumeroDia(new Date(data.fecha).getDate())
                 setTipoCita(data.tipoCita)
-                const response2 = await fetch(`http://localhost:3002/hora-semanal/profesor/${data.usuariocitaequipo.id}`);
+                const response2 = await fetch(`https://td-g-production.up.railway.app/hora-semanal/profesor/${data.usuariocitaequipo.id}`);
                 const data2 = await response2.json();
                 setSalon(data2[0].salon)
                 if (fechaPruebas.getDate() == new Date(data.fecha).getDate()) {
@@ -122,7 +122,7 @@ function page({ params }) {
         fetchData();
     }, [params.id, setCita]);
     const verAsesoria = async (id) => {
-        const response = await fetch('http://localhost:3002/seguimiento-ppi/Cita/' + id);
+        const response = await fetch('https://td-g-production.up.railway.app/seguimiento-ppi/Cita/' + id);
         const data = await response.json();
         router.push('/component/seguimientos/visualizar/' + data.id);
     }
@@ -168,7 +168,7 @@ function page({ params }) {
     }, [listEquipos]);
     const listarEquipo = async () => {
         try {
-            const response = await fetch(`http://localhost:3002/equipo-ppi`);
+            const response = await fetch(`https://td-g-production.up.railway.app/equipo-ppi`);
             const data = await response.json();
             if (response.ok) {
                 setListEquipos(data)
@@ -183,7 +183,7 @@ function page({ params }) {
 
         const getEstudiantesXEquipo = async () => {
             try {
-                const response = await fetch(`http://localhost:3002/equipo-usuarios/Estudiantes`);
+                const response = await fetch(`https://td-g-production.up.railway.app/equipo-usuarios/Estudiantes`);
                 const data = await response.json();
                 if (response.ok) {
                     console.log(data[equipo.codigoEquipo])
@@ -229,7 +229,7 @@ function page({ params }) {
         } else {
             setShowACampos(true)
         }
-        const response2 = await fetch(`http://localhost:3002/citas-asesoria-ppi/BuscarFechaHoraUsuario/${datos.fecha}/${hora}/1`);
+        const response2 = await fetch(`https://td-g-production.up.railway.app/citas-asesoria-ppi/BuscarFechaHoraUsuario/${datos.fecha}/${hora}/1`);
         if (response2.ok) {
             const data2 = await response2.json();
             if (data2.length == 0) {
@@ -239,7 +239,7 @@ function page({ params }) {
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(datos)
                 };
-                const response = await fetch('http://localhost:3002/citas-asesoria-ppi/' + params.id, requestOptions);
+                const response = await fetch('https://td-g-production.up.railway.app/citas-asesoria-ppi/' + params.id, requestOptions);
                 if (response.ok) {
                     setShowCorrecto(true)
                 }
@@ -253,7 +253,7 @@ function page({ params }) {
             const FechaCancelar = fechaPruebas;
             FechaCancelar.setDate(diaCancelar);
             const Fecha = format(FechaCancelar, 'yyyy-MM-dd');
-            const response2 = await fetch(`http://localhost:3002/citas-asesoria-ppi/BuscarFechaHoraUsuario/${Fecha}/${horaCancelar}:${minCancelar}/1`);
+            const response2 = await fetch(`https://td-g-production.up.railway.app/citas-asesoria-ppi/BuscarFechaHoraUsuario/${Fecha}/${horaCancelar}:${minCancelar}/1`);
             const data2 = await response2.json();
             if (data2.length != 0) {
                 setShowOcupado(true)
@@ -294,11 +294,11 @@ function page({ params }) {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(datosCrear)
             };
-            const response = await fetch('http://localhost:3002/citas-asesoria-ppi', requestOptions);
+            const response = await fetch('https://td-g-production.up.railway.app/citas-asesoria-ppi', requestOptions);
             if (response.ok) {
-                const response = await fetch('http://localhost:3002/hora-semanal/profesor/1');
+                const response = await fetch('https://td-g-production.up.railway.app/hora-semanal/profesor/1');
                 const data = await response.json();
-                const response3 = await fetch(`http://localhost:3002/citas-asesoria-ppi/BuscarFechaHoraUsuario/${Fecha}/${horaCancelar}:${minCancelar}/1`);
+                const response3 = await fetch(`https://td-g-production.up.railway.app/citas-asesoria-ppi/BuscarFechaHoraUsuario/${Fecha}/${horaCancelar}:${minCancelar}/1`);
                 if (!response3.ok) {
                     showAlert(true)
                     return;
@@ -346,8 +346,8 @@ function page({ params }) {
                     };
                     try {
                         const [responseCita, responseEquipo] = await Promise.allSettled([
-                            fetch('http://localhost:3002/citas-asesoria-ppi/' + id, requestOptionsCita),
-                            fetch('http://localhost:3002/hora-semanal/' + data[0].id, requestOptionsEquipo)
+                            fetch('https://td-g-production.up.railway.app/citas-asesoria-ppi/' + id, requestOptionsCita),
+                            fetch('https://td-g-production.up.railway.app/hora-semanal/' + data[0].id, requestOptionsEquipo)
                         ]);
 
                         if (responseCita.status === 'fulfilled' && responseEquipo.status === 'fulfilled') {
@@ -361,16 +361,16 @@ function page({ params }) {
                                     headers: { 'Content-Type': 'application/json' },
                                     body: JSON.stringify(datos)
                                 };
-                                const response = await fetch('http://localhost:3002/seguimiento-ppi/CancelacionCita/' + cita.id, requestOptions);
+                                const response = await fetch('https://td-g-production.up.railway.app/seguimiento-ppi/CancelacionCita/' + cita.id, requestOptions);
                                 if (response.ok)
                                     auxBan = true
                             } else {
-                                alert()
+                                //alert()
                                 const requestOptions = {
                                     method: 'DELETE',
                                     headers: { 'Content-Type': 'application/json' }
                                 };
-                                const response = await fetch('http://localhost:3002/seguimiento-ppi/' + cita.id, requestOptions);
+                                const response = await fetch('https://td-g-production.up.railway.app/seguimiento-ppi/' + cita.id, requestOptions);
                                 if (response.ok)
                                     auxBan = true
                             }
@@ -388,7 +388,7 @@ function page({ params }) {
                                     headers: { 'Content-Type': 'application/json' },
                                     body: JSON.stringify(datos)
                                 };
-                                const response = await fetch('http://localhost:3002/notificaciones', requestOptions);
+                                const response = await fetch('https://td-g-production.up.railway.app/notificaciones', requestOptions);
                                 if (response.ok) {
                                     setShowCorrecto(true);
                                     setTimeout(() => {
@@ -430,7 +430,7 @@ function page({ params }) {
     }, [showOcupado]);
 
     const verBitacora = (id) => {
-        router.push('/bitacora/visualizar/asesor/' + id);
+        router.push('/component/bitacora/visualizar/asesor/' + id);
     }
     return (
         <><div className="ml-6 mr-6 mt-6 border   bg-white border-b flex justify-between">
@@ -548,16 +548,18 @@ function page({ params }) {
                                     </span>
                                 </div>
                             </div>
-                            <div className="m-4 sm:m-5 px-5 text-center">
+                            <div className="text-center mt-5">
                                 <div>
                                     <h1 className="text-2xl sm:text-3xl font-bold text-gray-600">Estudiantes:</h1>
                                 </div>
                                 <div className='lg:mr-8'>
-                                    {estudiantesEquipo && estudiantesEquipo.map((item) => (
-                                        <span key={item.id} className=" text-2xl text-gray-500 sm:mt-2 ml-2 sm:ml-4 font-semibold px-2 sm:px-3">
-                                            {item.nombre}<br />
-                                        </span>
-                                    ))}
+                                    <ul>
+                                        {estudiantesEquipo && estudiantesEquipo.map((item) => (
+                                            <li key={item.id} className="text-base   text-gray-500 sm:mt-2 ml-2 sm:ml-4 font-semibold px-2 sm:px-3" style={{ maxWidth: "300px" }}>
+                                                &bull; {item.nombre}<br />
+                                            </li>
+                                        ))}
+                                    </ul>
                                 </div>
                             </div>
                         </div>

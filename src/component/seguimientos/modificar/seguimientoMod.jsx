@@ -22,7 +22,7 @@ function seguimientoMod({ idSeguimiento, idEstado }) {
 
     useEffect(() => {
         const traerAsesoria = async () => {
-            const response = await fetch('http://localhost:3002/seguimiento-ppi/id/' + id);
+            const response = await fetch('https://td-g-production.up.railway.app/seguimiento-ppi/id/' + id);
             const data = await response.json();
             if (response.ok) {
                 setAsesoria(data);
@@ -30,7 +30,7 @@ function seguimientoMod({ idSeguimiento, idEstado }) {
         }
 
         const fetchData = async () => {
-            const response = await fetch('http://localhost:3002/seguimiento-ppi/estudiantes/' + id);
+            const response = await fetch('https://td-g-production.up.railway.app/seguimiento-ppi/estudiantes/' + id);
             const data = await response.json();
             if (response.ok) {
                 setEstudiantes(data)
@@ -39,7 +39,7 @@ function seguimientoMod({ idSeguimiento, idEstado }) {
         };
 
         const traerEstado = async () => {
-            const response = await fetch('http://localhost:3002/estado-seguimiento-cambio/id/' + idEstado);
+            const response = await fetch('https://td-g-production.up.railway.app/estado-seguimiento-cambio/id/' + idEstado);
             const data = await response.json();
             if (response.ok) {
                 setEstado(data.estadoSeguimiento);
@@ -49,7 +49,7 @@ function seguimientoMod({ idSeguimiento, idEstado }) {
         }
 
         const traerCita = async () => {
-            const response = await fetch('http://localhost:3002/citas-asesoria-ppi/Seguimiento/' + id);
+            const response = await fetch('https://td-g-production.up.railway.app/citas-asesoria-ppi/Seguimiento/' + id);
             const data = await response.json();
             if (response.ok) {
                 setCita(data)
@@ -103,7 +103,7 @@ function seguimientoMod({ idSeguimiento, idEstado }) {
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(dato)
                 };
-                const response = await fetch('http://localhost:3002/seguimiento-ppi/' + id, requestOptions);
+                const response = await fetch('https://td-g-production.up.railway.app/seguimiento-ppi/' + id, requestOptions);
                 if (response.ok) {
                     let dato = {
                     }
@@ -120,7 +120,7 @@ function seguimientoMod({ idSeguimiento, idEstado }) {
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify(dato)
                     };
-                    const response = await fetch('http://localhost:3002/seguimiento-ppi/Asistencia/' + id, requestOptions);
+                    const response = await fetch('https://td-g-production.up.railway.app/seguimiento-ppi/Asistencia/' + id, requestOptions);
                     if (response.ok) {
                         const dato = {
                             "estadoCita": 3
@@ -130,7 +130,7 @@ function seguimientoMod({ idSeguimiento, idEstado }) {
                             headers: { 'Content-Type': 'application/json' },
                             body: JSON.stringify(dato)
                         };
-                        const response = await fetch('http://localhost:3002/citas-asesoria-ppi/' + cita.id, requestOptions);
+                        const response = await fetch('https://td-g-production.up.railway.app/citas-asesoria-ppi/' + cita.id, requestOptions);
                         if (response.ok) {
                             const dato = {
                                 "estadoSeguimiento": 2,
@@ -140,7 +140,7 @@ function seguimientoMod({ idSeguimiento, idEstado }) {
                                 headers: { 'Content-Type': 'application/json' },
                                 body: JSON.stringify(dato)
                             };
-                            const response = await fetch('http://localhost:3002/estado-seguimiento-cambio/' + idEstado, requestOptions);
+                            const response = await fetch('https://td-g-production.up.railway.app/estado-seguimiento-cambio/' + idEstado, requestOptions);
                             if (response.ok) {
                                 setShowCorrecto(true);
                                 setTimeout(() => {

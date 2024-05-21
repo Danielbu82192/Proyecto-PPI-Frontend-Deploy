@@ -12,6 +12,7 @@ export default function page() {
     const [asesorSeleccionado, setAsesorSeleccionado] = useState([])
     const [estudiantes, setEstudiantes] = useState([])
     const [citasEquipo, setCitasEquipo] = useState([])
+    const [showNoEqupo, setShowNoEqupo] = useState(false);
     const [semanas, setSemanas] = useState([])
     const [showCorrecto, setShowCorrecto] = useState(false)
     const [showM2citas, setShowM2citas] = useState(false)
@@ -26,33 +27,33 @@ export default function page() {
     const [horaMinutos, setHoraMinutos] = useState('')
     const [segundaAsesoria, setSegundaAsesoria] = useState(false);
     const [estadoAgendar, setEstadoAgendar] = useState(false)
+    const [estadoEquipo, setEstadoEquipo] = useState(true)
     const [horasM, setHorasM] = useState([])
     const [semanaSeleccionada, setSemanaSeleccionada] = useState([])
     const [usuario, setUsuario] = useState([]);
     const [fechaPruebas, setFechaPruebas] = useState(new Date());
-    const monthIndex =new Date(fechaPruebas).getMonth();
-    const numeroDia =new Date(fechaPruebas).getDate();  // Obtiene el índice del mes actual (0-11)
+    const monthIndex = new Date(fechaPruebas).getMonth();
+    const numeroDia = new Date(fechaPruebas).getDate();  // Obtiene el índice del mes actual (0-11)
     const options = { month: 'long' }; // Opciones para formatear el nombre del mes
     const monthName = new Date(2000, monthIndex).toLocaleString('es-ES', options); // Cambia 'es-ES' por tu localización si es diferente
 
     useEffect(() => {
         const buscarAsesores = async () => {
-            const response = await fetch(`http://localhost:3002/usuario/asesor`);
+            const response = await fetch(`https://td-g-production.up.railway.app/usuario/asesor`);
             const data = await response.json();
             if (response.ok) {
-                console.log(data)
                 setAsesores(data);
             }
         }
         const semanas = async () => {
-            const response = await fetch('http://localhost:3002/semanas');
+            const response = await fetch('https://td-g-production.up.railway.app/semanas');
             const data = await response.json();
             if (response.ok) {
                 setSemanas(data)
                 let fechaSelec = []
                 for (let index = 0; index < data.length; index++) {
                     const element = data[index];
-                    const fecha =new Date(fechaPruebas)
+                    const fecha = new Date(fechaPruebas)
                     const fechaInicio = new Date(element.fechaInicio)
                     const fechaFin = new Date(element.fechaFin)
                     if (fechaInicio <= fecha && fechaFin >= fecha) {
@@ -69,11 +70,16 @@ export default function page() {
             const bytes = CryptoJS.AES.decrypt(usuarioNest, 'PPIITYTPIJC');
             const usuarioN = JSON.parse(bytes.toString(CryptoJS.enc.Utf8))
 
-            const response = await fetch(`http://localhost:3002/equipo-usuarios/estudiantes`);
+            const response = await fetch(`https://td-g-production.up.railway.app/equipo-usuarios/estudiantes`);
             const data = await response.json();
             if (response.ok) {
                 const equipo = usuarioN.usuario[0]
-                setEstudiantes(data[equipo.codigoEquipo]);
+                try {
+                    setEstudiantes(data[equipo.codigoEquipo]);
+                } catch (e) {
+                    setShowNoEqupo(true)
+                    setEstadoEquipo(false)
+                }
             }
             setUsuario(usuarioN)
         }
@@ -101,14 +107,14 @@ export default function page() {
         Jueves.checked = false;
         Viernes.checked = false;
         Sabado.checked = false;
-        const fechaActual =new Date(fechaPruebas);
+        const fechaActual = new Date(fechaPruebas);
         const fechaLunes = new Date(fechaActual);
         const fechaSabado = new Date(fechaActual); // Clona la fecha actual
         fechaLunes.setDate(fechaActual.getDate() - fechaActual.getDay() + 1);
         fechaSabado.setDate(fechaActual.getDate() - (fechaActual.getDay() - 7)); // Establece la fecha al próximo lunes
         const fechaInicio = format(fechaLunes, "MM-dd-yyyy")
         const fechaFin = format(fechaSabado, "MM-dd-yyyy")
-        const response = await fetch(`http://localhost:3002/citas-asesoria-ppi/${fechaInicio}/${fechaFin}/${asesor}`);
+        const response = await fetch(`https://td-g-production.up.railway.app/citas-asesoria-ppi/${fechaInicio}/${fechaFin}/${asesor}`);
         const data = await response.json();
         if (response.ok) {
             const Lunes = document.getElementById("Lunes");
@@ -148,7 +154,7 @@ export default function page() {
                     const estado = item.estadoCita;
                     const tipo = item.tipoCita;
                     const fecha = new Date(item.fecha);
-                    const horaActual =new Date(fechaPruebas);
+                    const horaActual = new Date(fechaPruebas);
                     const hActual = parseInt(horaActual.getHours()) * 60 + (horaActual.getMinutes())
                     const minTotal = parseInt(item.hora.split(":")[0]) * 60 + parseInt(item.hora.split(":")[1])
                     if (fecha.getDay() == 1) {
@@ -228,7 +234,8 @@ export default function page() {
 
     const agendarCita = async () => {
         try {
-            const fecha =new Date(fechaPruebas);
+            const fecha = new Date(fechaPruebas);
+
             if (estadoPedirCita) {
                 if (segundaAsesoria) {
                     if (parseInt(fechaSeleccionada) < 3) {
@@ -239,18 +246,24 @@ export default function page() {
                         setShowAlert(true);
                         return;
                     }
-                }
-                const minActual = (fecha.getHours() * 60) + fecha.getMinutes()
+                } 
+                const minActual = ((fecha.getHours()+2) * 60) + fecha.getMinutes()
                 const minSelect = (parseInt(horaMinutos.split(':')[0]) * 60) + parseInt(horaMinutos.split(':')[1])
 
-                if (fecha.getDay() > parseInt(fechaSeleccionada) && minActual - minSelect > 0) {
+                if (fecha.getDay() > parseInt(fechaSeleccionada)) {
                     setShowAnterior(true)
                     return
                 }
 
+                if (fecha.getDay() == parseInt(fechaSeleccionada)) {
+                    if (minSelect-minActual < 0) {
+                        setShowAnterior(true)
+                        return
+                    }
+                } 
                 /*date: string, dateTime: string, attendees: string[], conferenceDataVersion: string*/
 
-                const fechaMeet =new Date(fechaPruebas)
+                const fechaMeet = new Date(fechaPruebas)
                 fechaMeet.setDate(fechaMeet.getDate() - fechaMeet.getDay() + 1);
                 fechaMeet.setDate(fechaMeet.getDate() + fechaSeleccionada)
                 let Tcita = 1;
@@ -270,14 +283,12 @@ export default function page() {
                     "attendees": estudiant,
                     "conferenceDataVersion": Tcita.toString()
                 };
-
-                console.log(dataCrearMeet)
                 const requestOptionsMEET = {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(dataCrearMeet)
                 };
-                const responseMeet = await fetch('http://localhost:3002/google/create-event/', requestOptionsMEET);
+                const responseMeet = await fetch('https://td-g-production.up.railway.app/google/create-event/', requestOptionsMEET);
                 if (!responseMeet.ok) {
                     setShowError(true)
                     return
@@ -287,27 +298,32 @@ export default function page() {
                 if (dataMeet.meetLink != null) {
                     linCita = dataMeet.meetLink
                 }
- 
+                const usuarioNest = localStorage.getItem('U2FsdGVkX1');
+                const bytes = CryptoJS.AES.decrypt(usuarioNest, 'PPIITYTPIJC');
+                const usuarioN = JSON.parse(bytes.toString(CryptoJS.enc.Utf8))
+                const responseEquipo = await fetch('https://td-g-production.up.railway.app/equipo-ppi/GetBitacoraByCode/' + usuarioN.usuario[0].codigoEquipo);
+                if (!responseEquipo.ok) {
+                    return;
+                }
+                const dataEquipo = await responseEquipo.json()
                 const datosCita = {
                     "estadoCita": "2",
-                    "equipocita": "1",
+                    "equipocita": dataEquipo[0].Bitacora_PPI_ID,
                     "link": linCita,
                     "idCalendar": dataMeet.eventId
                 };
-
                 const requestOptionsCita = {
                     method: 'PATCH',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(datosCita)
                 };
-                const responseCita = await fetch('http://localhost:3002/citas-asesoria-ppi/' + horaSeleccionada, requestOptionsCita);
- 
+                const responseCita = await fetch('https://td-g-production.up.railway.app/citas-asesoria-ppi/' + horaSeleccionada, requestOptionsCita);
+
                 if (responseCita.ok) {
-                    const fechaActual =new Date(fechaPruebas);
+                    const fechaActual = new Date(fechaPruebas);
                     const fechaLunes = new Date(fechaActual);
                     fechaActual.setDate(fechaActual.getDate() - fechaActual.getDay() + 1 + fechaSeleccionada);
                     let numSemana = 0
-                    console.log(semanas)
                     for (let i = 0; i < semanas.length; i++) {
                         const semana = semanas[i];
                         const fechaInicio = new Date(semana.fechaInicio);
@@ -315,7 +331,7 @@ export default function page() {
                         if (fechaPruebas >= fechaInicio && fechaPruebas <= fechaFin) {
                             numSemana = semana.numeroSemana;
                         }
-                    } 
+                    }
                     const datosSeguimiento = {
                         "fecha": fechaActual,
                         "citas": horaSeleccionada,
@@ -328,13 +344,12 @@ export default function page() {
                         datosSeguimiento[name] = element.id
                     });
 
-                    console.log(datosSeguimiento)
                     const requestOptionsSeguimiento = {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify(datosSeguimiento)
                     };
-                    const responseSeguimiento = await fetch('http://localhost:3002/seguimiento-ppi/', requestOptionsSeguimiento);
+                    const responseSeguimiento = await fetch('https://td-g-production.up.railway.app/seguimiento-ppi/', requestOptionsSeguimiento);
                     if (responseSeguimiento.ok) {
                         setEstadoAgendar(false);
                         setShowCorrecto(true);
@@ -365,7 +380,7 @@ export default function page() {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(datosCita2)
         };
-        const responseCita = await fetch('http://localhost:3002/citas-asesoria-ppi/' + horaSeleccionada, requestOptionsCita2);
+        const responseCita = await fetch('https://td-g-production.up.railway.app/citas-asesoria-ppi/' + horaSeleccionada, requestOptionsCita2);
         if (responseCita.ok) {
             setShowError(true)
         }
@@ -409,16 +424,33 @@ export default function page() {
         }
     }, [showError]);
     useEffect(() => {
+        if (showNoEqupo) {
+            const timer = setTimeout(() => {
+                setShowNoEqupo(false);
+            }, 5000);
+
+            return () => clearTimeout(timer);
+        }
+    }, [showNoEqupo]);
+    useEffect(() => {
         const traerCitasEquipo = async () => {
             setEstadoAgendar(false)
-            const fechaActual =new Date(fechaPruebas);
+            const fechaActual = new Date(fechaPruebas);
             const fechaLunes = new Date(fechaActual);
             const fechaSabado = new Date(fechaActual); // Clona la fecha actual
             fechaLunes.setDate(fechaActual.getDate() - fechaActual.getDay() + 1);
             fechaSabado.setDate(fechaActual.getDate() - (fechaActual.getDay() - 6));
             const fechaInicio = format(fechaLunes, 'yyyy-MM-dd');
             const fechaFin = format(fechaSabado, 'yyyy-MM-dd');
-            const response = await fetch(`http://localhost:3002/citas-asesoria-ppi/EquipoFecha/${fechaInicio}/${fechaFin}/1`);
+            const usuarioNest = localStorage.getItem('U2FsdGVkX1');
+            const bytes = CryptoJS.AES.decrypt(usuarioNest, 'PPIITYTPIJC');
+            const usuarioN = JSON.parse(bytes.toString(CryptoJS.enc.Utf8))
+            const responseEquipo = await fetch('https://td-g-production.up.railway.app/equipo-ppi/GetBitacoraByCode/' + usuarioN.usuario[0].codigoEquipo);
+            if (!responseEquipo.ok) {
+                return;
+            }
+            const dataEquipo = await responseEquipo.json()
+            const response = await fetch(`https://td-g-production.up.railway.app/citas-asesoria-ppi/EquipoFecha/${fechaInicio}/${fechaFin}/${dataEquipo[0].Bitacora_PPI_ID}`);
             const data = await response.json();
             if (response.ok) {
                 if (data.length == 0) {
@@ -557,10 +589,8 @@ export default function page() {
                                 </div>
                             </div>
                             <div>
-                                {estadoAgendar ? (
+                                {estadoAgendar && estadoEquipo ? (
                                     <div className='mt-5'>
-
-
                                         <button onClick={() => { agendarCita() }} class="text-white py-2 px-4 w-full rounded bg-green-400 hover:bg-green-500 shadow hover:shadow-lg font-medium transition transform hover:-translate-y-0.5">Agendar</button>
                                     </div>) : null}
                             </div>
@@ -652,8 +682,29 @@ export default function page() {
                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" class="fill-current text-white" width="20" height="20"><path fill-rule="evenodd" d="M8.22 1.754a.25.25 0 00-.44 0L1.698 13.132a.25.25 0 00.22.368h12.164a.25.25 0 00.22-.368L8.22 1.754zm-1.763-.707c.659-1.234 2.427-1.234 3.086 0l6.082 11.378A1.75 1.75 0 0114.082 15H1.918a1.75 1.75 0 01-1.543-2.575L6.457 1.047zM9 11a1 1 0 11-2 0 1 1 0 012 0zm-.25-5.25a.75.75 0 00-1.5 0v2.5a.75.75 0 001.5 0v-2.5z"></path></svg>
                             </div>
                             <div className="px-4 py-6 bg-white rounded-r-lg flex justify-between items-center w-full border border-l-transparent border-gray-200">
-                                <div>No se pueden agendar citas pasadas.</div>
+                                <div>No se pueden agendar citas pasadas o debe tener un máximo de 2 horas de diferencia.</div>
                                 <button onClick={() => { setShowAnterior(!showAnterior) }}>
+                                    <svg xmlns="http://www.w3.org/2000/svg" className="fill-current text-gray-700" viewBox="0 0 16 16" width="20" height="20">
+                                        <path fillRule="evenodd" d="M3.72 3.72a.75.75 0 011.06 0L8 6.94l3.22-3.22a.75.75 0 111.06 1.06L9.06 8l3.22 3.22a.75.75 0 11-1.06 1.06L8 9.06l-3.22 3.22a.75.75 0 01-1.06-1.06L6.94 8 3.72 4.78a.75.75 0 010-1.06z"></path>
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                )
+            }
+            {
+                showNoEqupo && (
+                    <div className="fixed bottom-0 right-0 mb-8 mr-8">
+                        <div className="flex w-96 shadow-lg rounded-lg">
+                            <div className="bg-orange-600 py-4 px-6 rounded-l-lg flex items-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" className="fill-current text-white" width="20" height="20">
+                                    <path fillRule="evenodd" d="M4.47.22A.75.75 0 015 0h6a.75.75 0 01.53.22l4.25 4.25c.141.14.22.331.22.53v6a.75.75 0 01-.22.53l-4.25 4.25A.75.75 0 0111 16H5a.75.75 0 01-.53-.22L.22 11.53A.75.75 0 010 11V5a.75.75 0 01.22-.53L4.47.22zm.84 1.28L1.5 5.31v5.38l3.81 3.81h5.38l3.81-3.81V5.31L10.69 1.5H5.31zM8 4a.75.75 0 01.75.75v3.5a.75.75 0 01-1.5 0v-3.5A.75.75 0 018 4zm0 8a1 1 0 100-2 1 1 0 000 2z"></path>
+                                </svg>
+                            </div>
+                            <div className="px-4 py-6 bg-white rounded-r-lg flex justify-between items-center w-full border border-l-transparent border-gray-200">
+                                <div>Actualmente, no te encuentras registrado en ningún equipo.</div>
+                                <button onClick={() => { setShowNoEqupo(!showNoEqupo) }}>
                                     <svg xmlns="http://www.w3.org/2000/svg" className="fill-current text-gray-700" viewBox="0 0 16 16" width="20" height="20">
                                         <path fillRule="evenodd" d="M3.72 3.72a.75.75 0 011.06 0L8 6.94l3.22-3.22a.75.75 0 111.06 1.06L9.06 8l3.22 3.22a.75.75 0 11-1.06 1.06L8 9.06l-3.22 3.22a.75.75 0 01-1.06-1.06L6.94 8 3.72 4.78a.75.75 0 010-1.06z"></path>
                                     </svg>

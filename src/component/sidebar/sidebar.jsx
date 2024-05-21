@@ -34,7 +34,7 @@ function sidebar({ children }) {
       const usuarioNest = localStorage.getItem('U2FsdGVkX1');
       const usuarioGoogle = localStorage.getItem('U2FsdGVkX2');
       if (usuarioNest == null || usuarioGoogle == null) {
-        router.push('/login')
+        router.push('/')
       } else {
         const bytes = CryptoJS.AES.decrypt(usuarioNest, 'PPIITYTPIJC');
         const NestOriginal = JSON.parse(bytes.toString(CryptoJS.enc.Utf8))
@@ -47,7 +47,7 @@ function sidebar({ children }) {
     }
 
     const estadoConeccionGoogle = async () => {
-      const response = await fetch(`http://localhost:3002/google/check-session`);
+      const response = await fetch(`https://td-g-production.up.railway.app/google/check-session`);
       const data = await response.json()
       if (data.isSessionActive) {
         obtenerNotifications();
@@ -71,7 +71,7 @@ function sidebar({ children }) {
 
   const obtenerNotifications = async () => {
     try {
-      const response = await fetch(`http://localhost:3002/notificaciones/Pendientes`);
+      const response = await fetch(`https://td-g-production.up.railway.app/notificaciones/Pendientes`);
       if (response.ok) {
         const data = await response.json();
         setNotificacionesPendientes(data);
@@ -82,10 +82,10 @@ function sidebar({ children }) {
   };
 
   const cerrarSesion = async () => {
-    const response2 = await fetch(`http://localhost:3002/google/logout`);
+    const response2 = await fetch(`https://td-g-production.up.railway.app/google/logout`);
     localStorage.removeItem('U2FsdGVkX1');
     localStorage.removeItem('U2FsdGVkX2');
-    router.push('/login')
+    router.push('/')
   }
 
   return (
@@ -101,26 +101,25 @@ function sidebar({ children }) {
                   <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
                 </svg>
               </div>
-              <div className="mr-4">
-                <img src="https://www.politecnicojic.edu.co/images/logo/logo-negro.png" className="h-10 w-auto marg" alt="Logo" />
+              <div className="mr-4 cursor-pointer">
+                <img src="https://www.politecnicojic.edu.co/images/logo/logo-negro.png" className=" h-10 w-auto marg" alt="Logo" onClick={() => { window.location.href = "/component" }} />
               </div>
             </div>
           </div>
-
-          {/*Slidebar*/}
-
-          {/* <div id="slidebar" className="fixed flex flex-col top-0 left-0 w-64 bg-white h-full border-r">
-          <div className="flex items-center justify-center h-14 border-b">
-            <div style={{ margin: "20px" }}><img src="https://www.politecnicojic.edu.co/images/logo/logo-negro.png" /></div>
-          </div>
-          <div className="overflow-y-auto overflow-x-hidden flex-grow">
-  <ul className="flex flex-col py-4 space-y-1">*/}
           <div id="slidebar" className={`fixed w-64 bg-white h-full border-r ${click ? 'mostrar' : ''}`}>
             <div className="flex items-center justify-center h-14 border-b">
-              <div style={{ margin: "20px" }}><img src="https://www.politecnicojic.edu.co/images/logo/logo-negro.png" /></div>
+              <div style={{ margin: "20px" }}><img src="https://www.politecnicojic.edu.co/images/logo/logo-negro.png" onClick={() => { window.location.href = "/component" }} /></div>
             </div>
             <div className="overflow-y-auto overflow-x-hidden flex-grow max-h-screen">
               <ul className="flex flex-col py-4 space-y-1 ">
+                <div className="cursor-pointer relative flex flex-row items-center h-16 focus:outline-none hover:bg-gray-50 text-gray-600 hover:text-gray-800 border-l-4 border-transparent hover:border-primary pr-6 " onClick={() => { window.location.href = "/component" }} >
+                  <span className={`inline-flex justify-center items-center ml-4 ${btnIconSize}`}>
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="m2.25 12 8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25" />
+                    </svg>
+                  </span>
+                  <span className={`ml-2 ${btnTextSize} tracking-wide truncate`}>Inicio</span>
+                </div>
                 {controlador == 0 ? (
                   <>
                     {rol != 2 ? (<li>
@@ -128,8 +127,7 @@ function sidebar({ children }) {
                         onClick={() => {
                           setControlador(1);
                         }}
-                        className="cursor-pointer relative flex flex-row items-center h-16 focus:outline-none hover:bg-gray-50 text-gray-600 hover:text-gray-800 border-l-4 border-transparent hover:border-primary pr-6 "
-                      >
+                        className="cursor-pointer relative flex flex-row items-center h-16 focus:outline-none hover:bg-gray-50 text-gray-600 hover:text-gray-800 border-l-4 border-transparent hover:border-primary pr-6 ">
                         <span className={`inline-flex justify-center items-center ml-4 ${btnIconSize}`}>
                           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-8 h-8 text-gray-600">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.042A8.967 8.967 0 0 0 6 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 0 1 6 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 0 1 6-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0 0 18 18a8.967 8.967 0 0 0-6 2.292m0-14.25v14.25" />
@@ -364,6 +362,16 @@ function sidebar({ children }) {
                             <span className={`ml-2 ${btnTextSize} tracking-wide truncate`}>Crear Bitácora</span>
                           </a>
                         </li>
+                        <li>
+                          <a href="/component/bitacora/visualizar/asesor" className="cursor-pointer relative flex flex-row items-center h-16 focus:outline-none hover:bg-gray-50 text-gray-600 hover:text-gray-800 border-l-4 border-transparent hover:border-primari pr-6">
+                            <span className={`inline-flex justify-center items-center ml-4 ${btnIconSize}`}>
+                              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-8 h-8 text-gray-600">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z" />
+                              </svg>
+                            </span>
+                            <span className={`ml-2 ${btnTextSize} tracking-wide truncate`}>Visualizar Bitácora</span>
+                          </a>
+                        </li>
                       </>
                     ) : rol == 3 ? (
                       <><li className="px-5">
@@ -463,7 +471,7 @@ function sidebar({ children }) {
                           <span className={`inline-flex justify-center items-center ml-4 ${btnIconSize}`}>
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-8 h-8 text-gray-600">
                               <path stroke-linecap="round" stroke-linejoin="round" d="m2.25 15.75 5.159-5.159a2.25 2.25 0 0 1 3.182 0l5.159 5.159m-1.5-1.5 1.409-1.409a2.25 2.25 0 0 1 3.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 0 0 1.5-1.5V6a1.5 1.5 0 0 0-1.5-1.5H3.75A1.5 1.5 0 0 0 2.25 6v12a1.5 1.5 0 0 0 1.5 1.5Zm10.5-11.25h.008v.008h-.008V8.25Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z" />
-                            </svg> 
+                            </svg>
                           </span>
                           <span className={`ml-2 ${btnTextSize} tracking-wide truncate`}>Contenido</span>
                         </a>
@@ -495,7 +503,7 @@ function sidebar({ children }) {
           </div>
           <div className='h-screen w-screen bg-gray-50' onClick={click ? hiddenSidebar : null}>
             <div id='contSlidebar' className={`ml-40 min-h-full flex flex-col flex-auto flex-shrink-0 antialiased bg-gray-50 text-gray-800 ${click ? 'hidden' : 'flex'}`}>
-            {/* <div id='contSlidebar' className={`ml-40 min-h-screen flex flex-col flex-auto flex-shrink-0 antialiased bg-gray-50 text-gray-800 ${click ? 'hidden' : 'flex'}`}> */}
+              {/* <div id='contSlidebar' className={`ml-40 min-h-screen flex flex-col flex-auto flex-shrink-0 antialiased bg-gray-50 text-gray-800 ${click ? 'hidden' : 'flex'}`}> */}
               {children}
             </div>
           </div>

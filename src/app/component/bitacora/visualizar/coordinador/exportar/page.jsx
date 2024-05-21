@@ -12,9 +12,9 @@ function page() {
     const [selectExport, setSelectExport] = useState([])
     const router = useRouter(); 
     const exportarBitacora = async () => {
-        const response = await fetch('http://localhost:3002/equipo-ppi/exportar/' + selectExport);
+        const response = await fetch('https://td-g-production.up.railway.app/equipo-ppi/exportar/' + selectExport);
         const filePath = await response.text()
-        const baseUrl = 'http://localhost:3002';
+        const baseUrl = 'https://td-g-production.up.railway.app';
         const fileUrl = new URL(filePath.replace('/public', ''), baseUrl).href;
         const newWindow = window.open(fileUrl, '_blank');
 
@@ -29,9 +29,9 @@ function page() {
     }
 
     const exportarCitasAsesores = async () => {
-        const response = await fetch('http://localhost:3002/equipo-ppi/exportar/' + selectExport);
+        const response = await fetch('https://td-g-production.up.railway.app/equipo-ppi/exportar/' + selectExport);
         const filePath = await response.text()
-        const baseUrl = 'http://localhost:3002';
+        const baseUrl = 'https://td-g-production.up.railway.app';
         const fileUrl = new URL(filePath.replace('/public', ''), baseUrl).href;
         const newWindow = window.open(fileUrl, '_blank');
 
@@ -47,7 +47,7 @@ function page() {
     }
     useEffect(() => {
         const cargarEquipo = async () => {
-            const response = await fetch(`http://localhost:3002/equipo-ppi`);
+            const response = await fetch(`https://td-g-production.up.railway.app/equipo-ppi`);
             const data = await response.json();
             if (response.ok) {
                 console.log(data)

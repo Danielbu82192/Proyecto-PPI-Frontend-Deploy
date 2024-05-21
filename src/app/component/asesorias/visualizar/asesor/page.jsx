@@ -18,7 +18,7 @@ function page() {
     useEffect(() => {
 
         const cargarsemana = async () => {
-            const response = await fetch(`http://localhost:3002/semanas`);
+            const response = await fetch(`https://td-g-production.up.railway.app/semanas`);
             const data = await response.json();
             if (response.ok) {
                 let fechaSelec = []

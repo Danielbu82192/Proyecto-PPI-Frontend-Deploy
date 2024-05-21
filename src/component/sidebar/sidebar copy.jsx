@@ -28,7 +28,7 @@ function sidebar({ children }) {
 
   const obtenerNotifications = async () => {
     try {
-      const response = await fetch(`http://localhost:3002/notificaciones/Pendientes`);
+      const response = await fetch(`https://td-g-production.up.railway.app/notificaciones/Pendientes`);
       if (response.ok) {
         const data = await response.json();
         setNotificacionesPendientes(data);

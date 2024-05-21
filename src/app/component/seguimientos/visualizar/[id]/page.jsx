@@ -9,7 +9,7 @@ function page({ params }) {
 
   useEffect(() => {
     const traerEstado = async () => {
-      const response = await fetch('http://localhost:3002/seguimiento-ppi/id/' + params.id);
+      const response = await fetch('https://td-g-production.up.railway.app/seguimiento-ppi/id/' + params.id);
       const data = await response.json();
       if (response.ok) {
         setSeguimiento(data[0]);
@@ -43,7 +43,7 @@ function page({ params }) {
   }, [seguimiento]);
    
   const fetchUsuario = async (usuarioId, asistencia) => {
-    const response = await fetch(`http://localhost:3002/usuario/${usuarioId}`);
+    const response = await fetch(`https://td-g-production.up.railway.app/usuario/${usuarioId}`);
     const usuarioData = await response.json();
     return [usuarioData, asistencia];
   };

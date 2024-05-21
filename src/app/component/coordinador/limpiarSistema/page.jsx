@@ -11,9 +11,9 @@ function page() {
             method: 'DELETE',
             headers: { 'Content-Type': 'application/json' },
         };
-        const response = await fetch('http://localhost:3002/usuario/limpiarSistema/', requestOptions);
+        const response = await fetch('https://td-g-production.up.railway.app/usuario/limpiarSistema/', requestOptions);
         if(response.ok)
-            alert()
+            //alert()
     }
 
     return (

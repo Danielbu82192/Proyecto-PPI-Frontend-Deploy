@@ -20,12 +20,12 @@ function horasAsesores({ fechaInicio, fechaFin }) {
     useEffect(() => {
         const cargarAsesor = async () => {
             if (fechaInicio != null && fechaFin != null) {
-                const response = await fetch(`http://localhost:3002/usuario/asesor`);
+                const response = await fetch(`https://td-g-production.up.railway.app/usuario/asesor`);
                 const data = await response.json();
                 if (response.ok) {
                     for (const element of data) {
                         try {
-                            const response2 = await fetch(`http://localhost:3002/citas-asesoria-ppi/${fechaInicio}/${fechaFin}/` + element.id);
+                            const response2 = await fetch(`https://td-g-production.up.railway.app/citas-asesoria-ppi/${fechaInicio}/${fechaFin}/` + element.id);
                             const data2 = await response2.json();
                             let citasCumplidas = 0
                             let citasCanceladas = 0

@@ -26,7 +26,7 @@ function BannerForm({ type, id }) {
         if (type === 2) {
             const fetchData = async () => {
                 try {
-                    const response = await fetch(`http://localhost:3002/banner/${id}`);
+                    const response = await fetch(`https://td-g-production.up.railway.app/banner/${id}`);
                     if (response.ok) {
                         const data = await response.json();
                         console.log(data);
@@ -36,7 +36,7 @@ function BannerForm({ type, id }) {
                         document.getElementById('fechaFin').value = data.fechaFin;
                         data.estado === 1 ? setVisible(true) && setOculto(false) : setOculto(true) && setVisible(false);
                         const extension = data.urlImagen.split('.').pop();
-                        const imageUrl = `http://localhost:3002${data.urlImagen}`;
+                        const imageUrl = `https://td-g-production.up.railway.app${data.urlImagen}`;
                         const imageBlob = await fetch(imageUrl).then(res => res.blob());
                         const file = new File([imageBlob], `${data.urlImagen.split('/').pop(2)}`, { type: `image/${extension}` });
                         const fileList = new DataTransfer();
@@ -55,7 +55,7 @@ function BannerForm({ type, id }) {
                                 setBanner(false);
                             }
                         };
-                        document.getElementById('preview').src = `http://localhost:3002${data.urlImagen}`;
+                        document.getElementById('preview').src = `https://td-g-production.up.railway.app${data.urlImagen}`;
                         document.getElementById('preview').style.display = 'block';
                     } else {
                         setRedirecting(true);
@@ -217,7 +217,7 @@ function BannerForm({ type, id }) {
         if (!event.target.titulo.value || !event.target.visible.checked && !event.target.oculto.checked || !event.target.fechaInicio.value ||
             !event.target.fechaFin.value || !event.target.banner.checked && !event.target.noticia.checked ||
             !event.target.contenido.value || !event.target.file.files[0]) {
-            // alert('Por favor, completa todos los campos');
+            // //alert('Por favor, completa todos los campos');
             setAlertMesage('Por favor, completa todos los campos.');
             setShowWarning(true);
             return;
@@ -234,7 +234,7 @@ function BannerForm({ type, id }) {
 
         if (type === 1) {
             try {
-                const response = await fetch('http://localhost:3002/banner/create', {
+                const response = await fetch('https://td-g-production.up.railway.app/banner/create', {
                     method: 'POST',
                     body: formData,
                 });
@@ -257,7 +257,7 @@ function BannerForm({ type, id }) {
 
         if (type === 2) {
             try {
-                const response = await fetch(`http://localhost:3002/banner/update/${id}`, {
+                const response = await fetch(`https://td-g-production.up.railway.app/banner/update/${id}`, {
                     method: 'PATCH',
                     body: formData,
                 });

@@ -42,7 +42,7 @@ function page() {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(datos)
         };
-        const response = await fetch('http://localhost:3002/hora-semanal/' + usuarioNest.id, requestOptions);
+        const response = await fetch('https://td-g-production.up.railway.app/hora-semanal/' + usuarioNest.id, requestOptions);
         if (response.ok) {
             setShowCorrecto(true)
             setShowMod(false)

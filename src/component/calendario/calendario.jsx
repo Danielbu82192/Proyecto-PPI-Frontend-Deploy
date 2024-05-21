@@ -71,7 +71,7 @@ function calendario() {
         fechaSabado.setDate(fechaLunes.getDate() + 5);
         const fechaInicio = format(fechaLunes, 'yyyy-MM-dd');
         const fechaFin = format(fechaSabado, 'yyyy-MM-dd');
-        const response = await fetch(`http://localhost:3002/citas-asesoria-ppi/${fechaInicio}/${fechaFin}/` + id);
+        const response = await fetch(`https://td-g-production.up.railway.app/citas-asesoria-ppi/${fechaInicio}/${fechaFin}/` + id);
         const data = await response.json();
         if (response.ok) {
             data.map((item) => {

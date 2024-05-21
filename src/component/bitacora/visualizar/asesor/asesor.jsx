@@ -24,7 +24,7 @@ export default function asesor() {
 
   useEffect(() => {
     const traerBitacoras = async () => {
-      const response = await fetch('http://localhost:3002/equipo-ppi');
+      const response = await fetch('https://td-g-production.up.railway.app/equipo-ppi');
       const data = await response.json();
       if (response.ok) {
         setBitacoras(data)
@@ -37,7 +37,7 @@ export default function asesor() {
 
   useEffect(() => {
     const fetchData = async () => {
-      const response2 = await fetch('http://localhost:3002/equipo-usuarios/Estudiantes');
+      const response2 = await fetch('https://td-g-production.up.railway.app/equipo-usuarios/Estudiantes');
       const data2 = await response2.json();
       setEstudiantes(data2)
     };
@@ -59,16 +59,12 @@ export default function asesor() {
             className="mt-1 pl-10 pr-4 py-2 w-full border-2 rounded-md border-gray-300 shadow-sm sm:text-sm"
           />
         </div>
-      </div>
-
-
-
-      <div className='grid mt-5 grid-cols-1'>
-
+      </div> 
+      <div className='grid mt-5 grid-cols-1'> 
         {auxBitacoras.map((item) => (
           <a key={item.id} href={'/component/bitacora/visualizar/asesor/' + item.id}>
-            <div className='px-5 grid xl:grid-cols-3 lg:grid-cols-3 sm:grid-cols-3  grid-cols-1 items-center cursor-pointer border-2 my-2 border-gray-300 rounded-lg shadow-md hover:shadow-lg p-4 '>
-              <div className='mb-4  sm:mb-0 sm:mr-4'>
+            <div className='px-5 grid xl:grid-cols-3 lg:grid-cols-3 sm:grid-cols-3 grid-cols-1 items-center cursor-pointer border-2 my-2 border-gray-300 rounded-lg shadow-md hover:shadow-lg p-4'>
+              <div className='mb-4 sm:mb-0 sm:mr-4 col-span-1'>
                 <span className='text-xl font-bold text-gray-600'>
                   Equipo:
                 </span>
@@ -76,11 +72,11 @@ export default function asesor() {
                   {item.codigoEquipo}
                 </span>
               </div>
-              <div className='mb-4 sm:mb-0 sm:mr-4 grid grid-cols-1 xl:grid-cols-2'>
-                <div>
-                  <span className='text-xl font-bold text-gray-600'>
+              <div className='grid grid-cols-1 xl:grid-cols-1 col-span-1 xl:col-span-1 xl:ml-5'>
+                <div className='flex justify-center items-center'>
+                  <p className='text-xl font-bold text-gray-600'>
                     Nombre Proyecto:
-                  </span>
+                    </p>
                 </div>
                 <div>
                   <span className='ml-2 text-xl font-semibold text-gray-400'>
@@ -88,37 +84,33 @@ export default function asesor() {
                   </span>
                 </div>
               </div>
-              <div className='grid grid-cols-1 xl:grid-cols-2'>
-                <div>
-                  <p className='text-xl font-bold text-gray-600 '>
+              <div className='grid grid-cols-1 xl:grid-cols-1 col-span-1 xl:col-span-1 xl:ml-5'>
+                <div className='flex justify-center items-center'>
+                  <p className='text-xl font-bold text-gray-600'>
                     Estudiantes:
                   </p>
                 </div>
                 <div>
-                  <p className='text-xl  font-semibold ml-2 text-gray-400'>
+                  <ul className='text-xl font-semibold ml-2 text-gray-400 list-disc'>
                     {
                       Object.entries(estudiantes).map(([codigo, estudiantesArray]) => {
                         if (item.codigoEquipo == codigo) {
-                          return estudiantesArray.map(estudiante => {
-                            return (
-                              <React.Fragment key={estudiante.id}>
-                                {estudiante.nombre} <br />
-                              </React.Fragment>
-                            );
-                          });
+                          return estudiantesArray.map(estudiante => (
+                            <li key={estudiante.id}>
+                              {estudiante.nombre} <br />
+                            </li>
+                          ));
                         } else {
                           return null; // Retorna null si no se cumple la condición
                         }
                       })
                     }
-                  </p>
+                  </ul>
                 </div>
               </div>
-            </div>
+            </div> 
           </a>
-        ))}
-
-
+        ))} 
       </div>
     </div>
   )

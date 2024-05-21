@@ -10,38 +10,45 @@ function miBitacora() {
 
     const [bitacora, setBitacora] = useState([])
     const [estudiantes, setEstudiantes] = useState([])
+    const [estudiantesAux, setEstudiantesAux] = useState([])
     const [asistencia, setAsistencia] = useState([])
     const [seguimiento, setSeguimiento] = useState([])
     const [usuario, setUsuario] = useState([])
+    const [showNoEqupo, setShowNoEqupo] = useState(false);
 
     useEffect(() => {
         const traerBitacora = async () => {
             const usuarioNest = localStorage.getItem('U2FsdGVkX1');
             const bytes = CryptoJS.AES.decrypt(usuarioNest, 'PPIITYTPIJC');
-            const usuarioN = JSON.parse(bytes.toString(CryptoJS.enc.Utf8))
-            setUsuario(usuarioN)
-            const response = await fetch(`http://localhost:3002/equipo-usuarios/EstudiantesBitacora/${usuarioN.correo}`);
-            if (response.ok) {
-                const data = await response.json() 
-                setBitacora(data)
+            try {
+                const usuarioN = JSON.parse(bytes.toString(CryptoJS.enc.Utf8))
+                setUsuario(usuarioN)
+                const response = await fetch(`https://td-g-production.up.railway.app/equipo-usuarios/EstudiantesBitacora/${usuarioN.correo}`);
+                if (response.ok) {
+                    const data = await response.json()
+                    setBitacora(data)
 
+                }
+            } catch (e) {
+setShowNoEqupo(true)
             }
         }
         traerBitacora();
     }, []);
     useEffect(() => {
         const fetchData = async () => {
-            const response2 = await fetch('http://localhost:3002/equipo-usuarios/Estudiantes');
+            const response2 = await fetch('https://td-g-production.up.railway.app/equipo-usuarios/Estudiantes');
             const data2 = await response2.json();
             if (response2.ok) {
+                setEstudiantesAux(data2[bitacora.codigoEquipo])
                 setEstudiantes(data2);
-                const response = await fetch('http://localhost:3002/seguimiento-ppi/' + bitacora.codigoEquipo);
+                const response = await fetch('https://td-g-production.up.railway.app/seguimiento-ppi/' + bitacora.codigoEquipo);
                 const data = await response.json();
                 if (response.ok) {
                     setSeguimiento(data);
                 }
             }
-        }; 
+        };
         fetchData();
     }, [bitacora]);
 
@@ -75,11 +82,19 @@ function miBitacora() {
     }, [seguimiento]);
 
     const fetchUsuario = async (usuarioId, asistencia) => {
-        const response = await fetch(`http://localhost:3002/usuario/${usuarioId}`);
+        const response = await fetch(`https://td-g-production.up.railway.app/usuario/${usuarioId}`);
         const usuarioData = await response.json();
         return [usuarioData, asistencia];
     };
+    useEffect(() => {
+        if (showNoEqupo) {
+            const timer = setTimeout(() => {
+                setShowNoEqupo(false);
+            }, 5000);
 
+            return () => clearTimeout(timer);
+        }
+    }, [showNoEqupo]);
     return (
         <div>
 
@@ -90,19 +105,9 @@ function miBitacora() {
                         <span className="text-2xl font-bold text-gray-600">Estudiantes:</span>
                         <div className="ml-5 sm:ml-10 mt-2 text-xl text-gray-400">
                             {
-                                Object.entries(estudiantes).map(([codigo, estudiantesArray]) => {
-                                    if (bitacora.codigoEquipo == codigo) {
-                                        return estudiantesArray.map(estudiante => {
-                                            return (
-                                                <React.Fragment key={estudiante.id}>
-                                                    {estudiante.nombre} <br />
-                                                </React.Fragment>
-                                            );
-                                        });
-                                    } else {
-                                        return null; // Retorna null si no se cumple la condición
-                                    }
-                                })
+                                estudiantesAux && estudiantesAux.map((item) => (
+                                    <>{item.nombre}<br /></>
+                                ))
                             }
                         </div>
                     </div>
@@ -159,7 +164,6 @@ function miBitacora() {
                             <tbody className="divide-y divide-gray-200">
                                 {seguimiento.map((item, index) => {
                                     const estados = item.estados
-                                    console.log(item.estados)
                                     const asistenciaEstudiantes = estudiantes[item.id]
                                     estados.sort((a, b) => new Date(b.fecha) - new Date(a.fecha));
                                     return (
@@ -169,16 +173,16 @@ function miBitacora() {
                                             <td className="whitespace-normal text-center font-semibold px-4 py-2 text-gray-400">{item.compromiso} </td>
                                             <td className="whitespace-normal px-4 py-2 font-semibold text-center text-gray-400">{item.observacion} </td>
                                             <td className="whitespace-nowrap px-4 py-2 font-semibold text-gray-400 text-center">{
-                                             asistenciaEstudiantes ? (
-                                                asistenciaEstudiantes.map((item) => {
-                                                    if (item[1] == 1) {
-                                                        return (
-                                                            <>{item[0].nombre}<br /></>
-                                                        )
-                                                    }
-                                                })
-                                            ):(null)
-                                        }
+                                                asistenciaEstudiantes ? (
+                                                    asistenciaEstudiantes.map((item) => {
+                                                        if (item[1] == 1) {
+                                                            return (
+                                                                <>{item[0].nombre}<br /></>
+                                                            )
+                                                        }
+                                                    })
+                                                ) : (null)
+                                            }
                                             </td><td className="whitespace-normal px-4 py-2 text-center flex text-gray-700">
                                                 <a href={'/component/seguimientos/visualizar/' + item.id} className=' flex items-center justify-center'>
                                                     <div className='p-3 rounded-full bg-gray-600'>
@@ -204,7 +208,27 @@ function miBitacora() {
             </details>
 
 
-
+            {
+                showNoEqupo && (
+                    <div className="fixed bottom-0 right-0 mb-8 mr-8">
+                        <div className="flex w-96 shadow-lg rounded-lg">
+                            <div className="bg-orange-600 py-4 px-6 rounded-l-lg flex items-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" className="fill-current text-white" width="20" height="20">
+                                    <path fillRule="evenodd" d="M4.47.22A.75.75 0 015 0h6a.75.75 0 01.53.22l4.25 4.25c.141.14.22.331.22.53v6a.75.75 0 01-.22.53l-4.25 4.25A.75.75 0 0111 16H5a.75.75 0 01-.53-.22L.22 11.53A.75.75 0 010 11V5a.75.75 0 01.22-.53L4.47.22zm.84 1.28L1.5 5.31v5.38l3.81 3.81h5.38l3.81-3.81V5.31L10.69 1.5H5.31zM8 4a.75.75 0 01.75.75v3.5a.75.75 0 01-1.5 0v-3.5A.75.75 0 018 4zm0 8a1 1 0 100-2 1 1 0 000 2z"></path>
+                                </svg>
+                            </div>
+                            <div className="px-4 py-6 bg-white rounded-r-lg flex justify-between items-center w-full border border-l-transparent border-gray-200">
+                                <div>Actualmente, no te encuentras registrado en ningún equipo.</div>
+                                <button onClick={() => { setShowNoEqupo(!showNoEqupo) }}>
+                                    <svg xmlns="http://www.w3.org/2000/svg" className="fill-current text-gray-700" viewBox="0 0 16 16" width="20" height="20">
+                                        <path fillRule="evenodd" d="M3.72 3.72a.75.75 0 011.06 0L8 6.94l3.22-3.22a.75.75 0 111.06 1.06L9.06 8l3.22 3.22a.75.75 0 11-1.06 1.06L8 9.06l-3.22 3.22a.75.75 0 01-1.06-1.06L6.94 8 3.72 4.78a.75.75 0 010-1.06z"></path>
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                )
+            }
         </div>
     )
 }

@@ -10,6 +10,7 @@ function page({ params }) {
 
     const [fechaPruebas, setFechaPruebas] = useState(new Date());
 
+    const [showNoCancelar, setShowNoCancelar] = useState(false);
     const [cita, setCita] = useState([]);
     const [semanaConst, setSemanaConst] = useState(['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'])
     const [diasConst, setDiasConst] = useState(['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'])
@@ -67,10 +68,10 @@ function page({ params }) {
         const fetchData = async () => {
             try {
 
-                const responseob = await fetch(`http://localhost:3002/observacion-cita/`);
+                const responseob = await fetch(`https://td-g-production.up.railway.app/observacion-cita/`);
                 const dataob = await responseob.json();
                 setMotivo(dataob)
-                const response = await fetch(`http://localhost:3002/citas-asesoria-ppi/${params.id}`);
+                const response = await fetch(`https://td-g-production.up.railway.app/citas-asesoria-ppi/${params.id}`);
                 const data = await response.json();
                 setCita(data);
                 setCitaEstado(data.estadoCita)
@@ -81,7 +82,7 @@ function page({ params }) {
                 setSelectEstado(data.estadoCita.id)
                 setNumeroDia(new Date(data.fecha).getDate())
                 setTipoCita(data.tipoCita)
-                const response2 = await fetch(`http://localhost:3002/hora-semanal/profesor/${data.usuariocitaequipo.id}`);
+                const response2 = await fetch(`https://td-g-production.up.railway.app/hora-semanal/profesor/${data.usuariocitaequipo.id}`);
                 const data2 = await response2.json();
                 setSalon(data2[0].salon)
                 if (fechaPruebas.getDate() == new Date(data.fecha).getDate()) {
@@ -128,7 +129,7 @@ function page({ params }) {
         fetchData();
     }, [params.id, setCita]);
     const verAsesoria = async (id) => {
-        const response = await fetch('http://localhost:3002/seguimiento-ppi/Cita/' + id);
+        const response = await fetch('https://td-g-production.up.railway.app/seguimiento-ppi/Cita/' + id);
         const data = await response.json();
         router.push('/seguimientos/visualizar/' + data.id);
     }
@@ -151,7 +152,15 @@ function page({ params }) {
             return () => clearTimeout(timer);
         }
     }, [showACampos]);
+    useEffect(() => {
+        if (showNoCancelar) {
+            const timer = setTimeout(() => {
+                setShowNoCancelar(false);
+            }, 2000);
 
+            return () => clearTimeout(timer);
+        }
+    }, [showNoCancelar]);
     useEffect(() => {
         if (showCamposVacios) {
             const timer = setTimeout(() => {
@@ -174,7 +183,7 @@ function page({ params }) {
     }, [listEquipos]);
     const listarEquipo = async () => {
         try {
-            const response = await fetch(`http://localhost:3002/equipo-ppi`);
+            const response = await fetch(`https://td-g-production.up.railway.app/equipo-ppi`);
             const data = await response.json();
             if (response.ok) {
                 setListEquipos(data)
@@ -189,7 +198,7 @@ function page({ params }) {
 
         const getEstudiantesXEquipo = async () => {
             try {
-                const response = await fetch(`http://localhost:3002/equipo-usuarios/Estudiantes`);
+                const response = await fetch(`https://td-g-production.up.railway.app/equipo-usuarios/Estudiantes`);
                 const data = await response.json();
                 if (response.ok) {
                     console.log(data[equipo.codigoEquipo])
@@ -215,7 +224,6 @@ function page({ params }) {
         if (horCan == -1) {
             horCan = horaConst
         }
-        alert(`${horCan}:${mnCan}`)
         const fecha = new Date(fechaPruebas);
         if (parseInt(numeroDia) >= fecha.getDate()) {
             const horaMod = parseInt(horCan * 60) + parseInt(mnCan);
@@ -226,7 +234,7 @@ function page({ params }) {
                     return
                 }
             }
-            fecha.setDate(parseInt(fecha.getDate()) + (parseInt(numeroDia) - parseInt(fecha.getDate())))
+            fecha.setDate(parseInt(fecha.getDate()) + (parseInt(numeroDia) - parseInt(fecha.getDate())) + 1)
             const fechaFormat = format(fecha, "MM-dd-yyyy");
             const hora = `${horCan}:${mnCan}`;
             datos = {
@@ -236,7 +244,8 @@ function page({ params }) {
         } else {
             setShowACampos(true)
         }
-        const response2 = await fetch(`http://localhost:3002/citas-asesoria-ppi/BuscarFechaHoraUsuario/${datos.fecha}/${horCan}:${mnCan}/` + cita.usuariocitaequipo.id);
+        const response2 = await fetch(`https://td-g-production.up.railway.app/citas-asesoria-ppi/BuscarFechaHoraUsuario/${datos.fecha}/${horCan}:${mnCan}/` + cita.usuariocitaequipo.id);
+
         if (response2.ok) {
             const data2 = await response2.json();
             if (data2.length == 0) {
@@ -245,7 +254,8 @@ function page({ params }) {
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(datos)
                 };
-                const response = await fetch('http://localhost:3002/citas-asesoria-ppi/' + params.id, requestOptions);
+                const response = await fetch('https://td-g-production.up.railway.app/citas-asesoria-ppi/' + params.id, requestOptions);
+
                 if (response.ok) {
                     setShowCorrecto(true)
                     setTimeout(function () {
@@ -259,11 +269,20 @@ function page({ params }) {
         }
     }
     const cancelarCita = async (id) => {
-        if (diaCancelar != 0 && horaCancelar != 0 && minCancelar != -1) {
+        if (diaCancelar != 0 && horaCancelar != 0 && minCancelar != -1 && observacion != -1) {
+            const fechaActual = new Date(fechaPruebas) 
+            if (fechaActual.getDate() == fecha.split("/")[0]) { 
+                const horaCita = (parseInt(hora.split(":")[0]) * 60) + parseInt(hora.split(":")[1])
+                const horaActual = (parseInt(fechaActual.getHours() + 2) * 60) + parseInt(fechaActual.getMinutes())
+                if (horaCita - horaActual < 0) {
+                    setShowNoCancelar(true)
+                    return
+                }
+            } 
             const FechaCancelar = new Date(fechaPruebas);
             FechaCancelar.setDate(diaCancelar);
             const Fecha = format(FechaCancelar, 'yyyy-MM-dd');
-            const response2 = await fetch(`http://localhost:3002/citas-asesoria-ppi/BuscarFechaHoraUsuario/${Fecha}/${horaCancelar}:${minCancelar}/1`);
+            const response2 = await fetch(`https://td-g-production.up.railway.app/citas-asesoria-ppi/BuscarFechaHoraUsuario/${Fecha}/${horaCancelar}:${minCancelar}/1`);
             const data2 = await response2.json();
             if (data2.length != 0) {
                 setShowOcupado(true)
@@ -275,7 +294,7 @@ function page({ params }) {
             let datosCrear = {}
             let EstadoCita = 0
             let estudiantes = []
-            const responseEstu = await fetch(`http://localhost:3002/equipo-usuarios/estudiantes`);
+            const responseEstu = await fetch(`https://td-g-production.up.railway.app/equipo-usuarios/estudiantes`);
             const dataEstu = await responseEstu.json();
             if (responseEstu.ok) {
                 estudiantes = dataEstu[equipo.codigoEquipo];
@@ -299,14 +318,13 @@ function page({ params }) {
                 "attendees": estudiant,
                 "conferenceDataVersion": Tcita.toString()
             };
-
             console.log(dataCrearMeet)
             const requestOptionsMEET = {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(dataCrearMeet)
             };
-            const responseMeet = await fetch('http://localhost:3002/google/create-event/', requestOptionsMEET);
+            const responseMeet = await fetch('https://td-g-production.up.railway.app/google/create-event/', requestOptionsMEET);
             if (!responseMeet.ok) {
                 setShowError(true)
                 return
@@ -317,48 +335,54 @@ function page({ params }) {
                 linCita = dataMeet.meetLink
             }
             if (FechaSabado.getDate() < FechaCancelar.getDate()) {
-                EstadoCita=6
+                EstadoCita = 6
                 datosCrear = {
                     "fecha": FechaCancelar,
                     "hora": `${horaCancelar}:${minCancelar}`,
                     "estadoCita": 6,
                     "link": "",
                     "modificaciones": "",
-                    "usuariocitaequipo": 1,
+                    "usuariocitaequipo": usuarioN.id,
                     "tipoCita": tipoCita.id,
                     "equipocita": equipo.id,
                     "link": linCita,
                     "idCalendar": dataMeet.eventId
                 }
             } else {
-                EstadoCita=2
+                EstadoCita = 2
                 datosCrear = {
                     "fecha": FechaCancelar,
                     "hora": `${horaCancelar}:${minCancelar}`,
                     "estadoCita": 2,
                     "link": "",
                     "modificaciones": "",
-                    "usuariocitaequipo": 1,
+                    "usuariocitaequipo": usuarioN.id,
                     "tipoCita": tipoCita.id,
                     "equipocita": equipo.id,
                     "link": linCita,
                     "idCalendar": dataMeet.eventId
                 }
             }
+
             const requestOptions = {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(datosCrear)
             };
-            const response = await fetch('http://localhost:3002/citas-asesoria-ppi', requestOptions);
+            console.log(datosCrear)
+            const response = await fetch('https://td-g-production.up.railway.app/citas-asesoria-ppi', requestOptions);
+
             if (response.ok) {
-                const response = await fetch('http://localhost:3002/hora-semanal/profesor/1');
+
+                const response = await fetch('https://td-g-production.up.railway.app/hora-semanal/profesor/' + usuarioN.id);
+
                 const data = await response.json();
-                const response3 = await fetch(`http://localhost:3002/citas-asesoria-ppi/BuscarFechaHoraUsuario/${Fecha}/${horaCancelar}:${minCancelar}/1`);
+                const response3 = await fetch(`https://td-g-production.up.railway.app/citas-asesoria-ppi/BuscarFechaHoraUsuario/${Fecha}/${horaCancelar}:${minCancelar}/` + usuarioN.id);
                 if (!response3.ok) {
                     showAlert(true)
                     return;
                 }
+
                 const citaNueva = await response3.json();
                 let datos = {}
                 const ids = cita.id
@@ -403,12 +427,11 @@ function page({ params }) {
                         body: JSON.stringify(datos)
                     };
                     try {
-                        const [responseCita, responseEquipo] = await Promise.allSettled([
-                            fetch('http://localhost:3002/citas-asesoria-ppi/' + id, requestOptionsCita),
-                            fetch('http://localhost:3002/hora-semanal/' + data[0].id, requestOptionsEquipo)
+                        const [responseCita] = await Promise.allSettled([
+                            fetch('https://td-g-production.up.railway.app/citas-asesoria-ppi/' + id, requestOptionsCita),
+                            //fetch('https://td-g-production.up.railway.app/hora-semanal/' + data[0].id, requestOptionsEquipo)
                         ]);
-
-                        if (responseCita.status === 'fulfilled' && responseEquipo.status === 'fulfilled') {
+                        if (responseCita.status === 'fulfilled') {
                             let auxBan = false
                             if (EstadoCita == 2) {
                                 const datos = {
@@ -419,15 +442,15 @@ function page({ params }) {
                                     headers: { 'Content-Type': 'application/json' },
                                     body: JSON.stringify(datos)
                                 };
-                                const response = await fetch('http://localhost:3002/seguimiento-ppi/CancelacionCita/' + cita.id, requestOptions);
+                                const response = await fetch('https://td-g-production.up.railway.app/seguimiento-ppi/CancelacionCita/' + cita.id, requestOptions);
                                 if (response.ok)
                                     auxBan = true
-                            } else { 
+                            } else {
                                 const requestOptions = {
                                     method: 'DELETE',
                                     headers: { 'Content-Type': 'application/json' }
                                 };
-                                const response = await fetch('http://localhost:3002/seguimiento-ppi/' + cita.id, requestOptions);
+                                const response = await fetch('https://td-g-production.up.railway.app/seguimiento-ppi/' + cita.id, requestOptions);
                                 if (response.ok)
                                     auxBan = true
                             }
@@ -444,7 +467,7 @@ function page({ params }) {
                                     headers: { 'Content-Type': 'application/json' },
                                     body: JSON.stringify(datos)
                                 };
-                                const response = await fetch('http://localhost:3002/notificaciones', requestOptions);
+                                const response = await fetch('https://td-g-production.up.railway.app/notificaciones', requestOptions);
                                 if (response.ok) {
                                     const dataCrearMeet = {
                                         "eventId": cita.idCalendar,
@@ -455,7 +478,7 @@ function page({ params }) {
                                         headers: { 'Content-Type': 'application/json' },
                                         body: JSON.stringify(dataCrearMeet)
                                     };
-                                    const responseMeet = await fetch('http://localhost:3002/google/delete-event/', requestOptionsMEET);
+                                    const responseMeet = await fetch('https://td-g-production.up.railway.app/google/delete-event/', requestOptionsMEET);
                                     if (responseMeet.ok) {
                                         setShowCorrecto(true);
                                         setTimeout(() => {
@@ -465,9 +488,11 @@ function page({ params }) {
                                 }
                             }
                         } else {
+
                             setShowAlert(true);
                         }
                     } catch (error) {
+
                         setShowAlert(true);
                     }
                 }
@@ -601,7 +626,7 @@ function page({ params }) {
                 ) : (
 
                     <>
-                        <div className={`p-10  grid grid-cols-1 lg:grid-cols-4  `}>
+                        <div className={`p-10  grid grid-cols-1 lg:grid-cols-4 gap-4" `}>
                             <div className="text-center mt-5">
                                 <div>
                                     <h1 className="text-2xl sm:text-3xl font-bold text-gray-600">Estado:</h1>
@@ -679,13 +704,16 @@ function page({ params }) {
                                     <h1 className="text-2xl sm:text-3xl font-bold text-gray-600">Estudiantes:</h1>
                                 </div>
                                 <div className='lg:mr-8'>
-                                    {estudiantesEquipo && estudiantesEquipo.map((item) => (
-                                        <span key={item.id} className=" text-2xl text-gray-500 sm:mt-2 ml-2 sm:ml-4 font-semibold px-2 sm:px-3">
-                                            {item.nombre}<br />
-                                        </span>
-                                    ))}
+                                    <ul>
+                                        {estudiantesEquipo && estudiantesEquipo.map((item) => (
+                                            <li key={item.id} className="text-base   text-gray-500 sm:mt-2 ml-2 sm:ml-4 font-semibold px-2 sm:px-3" style={{ maxWidth: "300px" }}>
+                                                &bull; {item.nombre}<br />
+                                            </li>
+                                        ))}
+                                    </ul>
                                 </div>
                             </div>
+
 
                         </div>
                         {citaEstado.id == 5 ? (
@@ -754,7 +782,7 @@ function page({ params }) {
                                             <select value={observacion} onChange={(e) => { setObservacion(e.target.value); }} id="minutos" className="mt-1 w-full rounded-md border-gray-200 shadow-sm sm:text-sm">
                                                 <option value="-1">Seleccione el motivo</option>
                                                 {motivo.map((item) => (
-                                                    <option key={item.id} value={item.nombre}>{item.nombre}</option>
+                                                    <option key={item.id} value={item.id}>{item.nombre}</option>
                                                 ))}
                                             </select>
                                         </div>
@@ -868,6 +896,25 @@ function page({ params }) {
                     <div className="px-4 py-6 bg-white rounded-r-lg flex justify-between items-center w-full border border-l-transparent border-gray-200">
                         <div>La fecha y hora seleccionadas se encuentran ocupadas.</div>
                         <button onClick={() => { setShowOcupado(!showOcupado) }}>
+                            <svg xmlns="http://www.w3.org/2000/svg" className="fill-current text-gray-700" viewBox="0 0 16 16" width="20" height="20">
+                                <path fillRule="evenodd" d="M3.72 3.72a.75.75 0 011.06 0L8 6.94l3.22-3.22a.75.75 0 111.06 1.06L9.06 8l3.22 3.22a.75.75 0 11-1.06 1.06L8 9.06l-3.22 3.22a.75.75 0 01-1.06-1.06L6.94 8 3.72 4.78a.75.75 0 010-1.06z"></path>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        )}
+        {showNoCancelar && (
+            <div className="fixed bottom-0 right-0 mb-8 mr-8">
+                <div className="flex w-96 shadow-lg rounded-lg">
+                    <div className="bg-red-600 py-4 px-6 rounded-l-lg flex items-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" className="fill-current text-white" width="20" height="20">
+                            <path fillRule="evenodd" d="M4.47.22A.75.75 0 015 0h6a.75.75 0 01.53.22l4.25 4.25c.141.14.22.331.22.53v6a.75.75 0 01-.22.53l-4.25 4.25A.75.75 0 0111 16H5a.75.75 0 01-.53-.22L.22 11.53A.75.75 0 010 11V5a.75.75 0 01.22-.53L4.47.22zm.84 1.28L1.5 5.31v5.38l3.81 3.81h5.38l3.81-3.81V5.31L10.69 1.5H5.31zM8 4a.75.75 0 01.75.75v3.5a.75.75 0 01-1.5 0v-3.5A.75.75 0 018 4zm0 8a1 1 0 100-2 1 1 0 000 2z"></path>
+                        </svg>
+                    </div>
+                    <div className="px-4 py-6 bg-white rounded-r-lg flex justify-between items-center w-full border border-l-transparent border-gray-200">
+                        <div>La cita se debe cancelar con 2 horas de anticipación.</div>
+                        <button onClick={() => { setShowNoCancelar(!showNoCancelar) }}>
                             <svg xmlns="http://www.w3.org/2000/svg" className="fill-current text-gray-700" viewBox="0 0 16 16" width="20" height="20">
                                 <path fillRule="evenodd" d="M3.72 3.72a.75.75 0 011.06 0L8 6.94l3.22-3.22a.75.75 0 111.06 1.06L9.06 8l3.22 3.22a.75.75 0 11-1.06 1.06L8 9.06l-3.22 3.22a.75.75 0 01-1.06-1.06L6.94 8 3.72 4.78a.75.75 0 010-1.06z"></path>
                             </svg>

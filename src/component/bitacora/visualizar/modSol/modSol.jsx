@@ -69,7 +69,7 @@ function modSol() {
 
     useEffect(() => {
         const traerEquipos = async () => {
-            const response = await fetch('http://localhost:3002/equipo-usuarios/bitacora');
+            const response = await fetch('https://td-g-production.up.railway.app/equipo-usuarios/bitacora');
             const data = await response.json();
             if (response.ok) {
                 setEquipo(data)
@@ -127,7 +127,7 @@ function modSol() {
                             if (modSol.id == usuarioSol.id) {
                                 return (
                                     <div key={key} className='sm:mt-3'>
-                                        <a href={bitacora.length == 0 ? '/component/bitacora/visualizar/modSol/' + key : '/component/bitacora/visualizar/asesor/' + bitacora[0].id} className={bitacora.length == 0 ? 'py-3 px-10 cursor-pointer rounded-xl text-lg border-2 font-bold text-red-600 border-red-600 hover:text-white hover:border-red-600 hover:bg-red-600' : 'py-3 px-10 rounded-xl text-lg border-2 font-bold text-emerald-600 border-emerald-600 hover:text-white hover:border-emerald-600 hover:bg-emerald-600'}>
+                                        <a href={'/component/bitacora/visualizar/modSol/' + key} className={bitacora.length == 0 ? 'py-3 px-10 cursor-pointer rounded-xl text-lg border-2 font-bold text-red-600 border-red-600 hover:text-white hover:border-red-600 hover:bg-red-600' : 'py-3 px-10 rounded-xl text-lg border-2 font-bold text-emerald-600 border-emerald-600 hover:text-white hover:border-emerald-600 hover:bg-emerald-600'}>
                                             {key}
                                         </a>
 

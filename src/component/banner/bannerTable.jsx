@@ -41,7 +41,7 @@ function BannerTable() {
     useEffect(() => {
         const fetchBanners = async () => {
             try {
-                const response = await fetch('http://localhost:3002/banner');
+                const response = await fetch('https://td-g-production.up.railway.app/banner');
                 const data = await response.json();
                 setBanners(data);
             } catch (error) {
@@ -52,14 +52,14 @@ function BannerTable() {
     }, [reloadBanners]);
 
     const handleDelete = async (id) => {
-        const response = await fetch(`http://localhost:3002/banner/delete/${id}`, {
+        const response = await fetch(`https://td-g-production.up.railway.app/banner/delete/${id}`, {
             method: 'DELETE',
         });
         setReloadBanners(!reloadBanners);
     };
 
     const handleToggleVisibility = async (id, currentState) => {
-        const response = await fetch(`http://localhost:3002/banner/visible/${id}`, {
+        const response = await fetch(`https://td-g-production.up.railway.app/banner/visible/${id}`, {
             method: 'PATCH',
             headers: {
                 'Content-Type': 'application/json',
@@ -108,9 +108,9 @@ function BannerTable() {
                                         <td className={`min-w-[8vw] max-w-[8vw] whitespace-nowrap overflow-hidden text-ellipsis px-4 py-2 font-semibold text-center text-gray-500 ${currentDate >= startDate ? null : 'line-through'}`}>{formatDate(item.fechaInicio)}</td>
                                         <td className={`min-w-[8vw] max-w-[8vw] whitespace-nowrap overflow-hidden text-ellipsis px-4 py-2 font-semibold text-center text-gray-500 ${currentDate <= endDate ? null : 'line-through'}`}>{formatDate(item.fechaFin)}</td>
                                         <td className="min-w-[8vw] max-w-[8vw] whitespace-nowrap overflow-hidden text-ellipsis px-4 py-2 font-semibold text-center text-gray-500 cursor-zoom-in"
-                                            onClick={() => handleShowImg(`http://localhost:3002${item.urlImagen}`)}>
+                                            onClick={() => handleShowImg(`https://td-g-production.up.railway.app${item.urlImagen}`)}>
                                             <div className="flex flex-col content-center items-center ">
-                                                <img src={`http://localhost:3002${item.urlImagen}`} alt="Imagen" style={{ width: '50px' }} />
+                                                <img src={`https://td-g-production.up.railway.app${item.urlImagen}`} alt="Imagen" style={{ width: '50px' }} />
                                             </div>
                                         </td>
                                         <td className="flex flex-col px-4 py-2">

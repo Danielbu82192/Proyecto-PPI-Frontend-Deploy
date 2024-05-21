@@ -7,13 +7,57 @@ import { useRouter } from "next/navigation";
 function crearBitacora({ equipo }) {
     const [nombre, setNombre] = useState('');
     const [descripcion, setDescripcion] = useState('');
+    const [bitacora, setBitacora] = useState([]);
     const [alcanceProyect, setAlcanceProyect] = useState('');
     const [alcance1, setAlcance1] = useState('');
     const [alcance2, setAlcance2] = useState('');
+    const [crear, setCrear] = useState('false')
     const [showAlert, setShowAlert] = useState(false);
     const [showCorrecto, setShowCorrecto] = useState(false);
     const router = useRouter();
+    const modificarBitacora = async () => {
+        if (nombre.length === 0 || descripcion.length === 0 || alcanceProyect.length === 0 || alcance1.length === 0 || alcance2.length === 0) {
+            setShowAlert(true);
+            return;
+        }
 
+        const datos = {
+            "codigoEquipo": equipo,
+            "nombre": nombre,
+            "descripcion": descripcion,
+            "alcance": alcanceProyect,
+            "socializacionuno": alcance1,
+            "socializaciondos": alcance2
+        };
+
+        console.log('Datos a enviar:', datos);
+
+        const requestOptions = {
+            method: 'PATCH',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(datos)
+        };
+
+        console.log('Opciones de la solicitud:', requestOptions);
+
+        try {
+            const url = 'http://localhost:3002/equipo-ppi/' + bitacora.id;
+            //alert(`Enviando solicitud a: ${url}`); // Para fines de depuración, puedes eliminarlo si no es necesario.
+            const response = await fetch(url, requestOptions);
+
+            if (response.ok) {
+                console.log('Solicitud exitosa:', await response.json());
+                setShowCorrecto(true);
+                setTimeout(() => {
+                    router.back();
+                }, 2000);
+            } else {
+                console.error('Error en la solicitud:', response.status, response.statusText);
+            }
+        } catch (error) {
+            console.error('Error en la solicitud:', error);
+        }
+    };
 
     const crearBitacora = async () => {
         if (nombre.length == 0 || descripcion.length == 0 || alcanceProyect.length == 0 || alcance1.length == 0 || alcance2.length == 0) {
@@ -35,7 +79,7 @@ function crearBitacora({ equipo }) {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(datos)
         };
-        const response = await fetch('http://localhost:3002/equipo-ppi', requestOptions);
+        const response = await fetch('https://td-g-production.up.railway.app/equipo-ppi', requestOptions);
         if (response.ok) {
             setShowCorrecto(true);
             setTimeout(() => {
@@ -63,6 +107,33 @@ function crearBitacora({ equipo }) {
             return () => clearTimeout(timer);
         }
     }, [showCorrecto]);
+
+    useEffect(() => {
+        const sePuedeCrear = async () => {
+            const response = await fetch('https://td-g-production.up.railway.app/equipo-ppi/equipo/' + equipo);
+            if (response.ok) {
+                const contentType = response.headers.get('content-type');
+                if (contentType && contentType.includes('application/json')) {
+                    const data = await response.json();
+                    console.log(data)
+                    setBitacora(data)
+                    setNombre(data.nombre)
+                    setDescripcion(data.descripcion)
+                    setAlcanceProyect(data.alcance)
+                    setAlcance1(data.socializacionuno)
+                    setAlcance2(data.socializaciondos)
+                    setCrear(false)
+                } else {
+                    setCrear(true)
+                }
+            } else {
+                console.log('Hubo un problema con la solicitud.');
+            }
+        }
+        sePuedeCrear();
+    }, []);
+
+
     return (
         <div>
             <div className='flex'>
@@ -120,7 +191,11 @@ function crearBitacora({ equipo }) {
                 ></textarea>
             </div>
             <div className='mt-5'>
-                <button onClick={() => crearBitacora()} class="text-white py-2 px-4 w-full rounded bg-green-400 hover:bg-green-500 shadow hover:shadow-lg font-medium transition transform hover:-translate-y-0.5">Crear</button>
+                {bitacora.length == 0 ? (<button onClick={() => crearBitacora()} class="text-white py-2 px-4 w-full rounded bg-green-400 hover:bg-green-500 shadow hover:shadow-lg font-medium transition transform hover:-translate-y-0.5">Crear</button>
+                ) : (
+                    <button onClick={() => modificarBitacora()} class="text-white py-2 px-4 w-full rounded bg-orange-400 hover:bg-orange-500 shadow hover:shadow-lg font-medium transition transform hover:-translate-y-0.5">Modificar</button>
+                )
+                }
             </div>
             {showAlert && (
                 <div className="fixed bottom-0 right-0 mb-8 mr-8">

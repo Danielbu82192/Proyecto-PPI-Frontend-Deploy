@@ -10,6 +10,7 @@ import { es } from 'date-fns/locale';
 function page({ params }) {
     const [bitacora, setBitacora] = useState([]);
     const [estudiantes, setEstudiantes] = useState([])
+    const [estudiantesAux, setEstudiantesAux] = useState([])
     const [usuario, setUsuario] = useState([])
     const [semanas, setSemanas] = useState([])
     const [rol, setRol] = useState([])
@@ -18,14 +19,72 @@ function page({ params }) {
     const [asistencia, setAsistencia] = useState([])
     const [seguimiento, setSeguimiento] = useState([])
     const [modSol, setModSol] = useState([])
-    const claveSecreta = parseInt(new Date().getDay()) * 98765;
+    const [fechaPruebas, setFechaPruebas] = useState(new Date('05-23-2024'));
+
+    const fetchUsuario = async (usuarioId, asistencia) => {
+        const response = await fetch(`https://td-g-production.up.railway.app/usuario/${usuarioId}`);
+        const usuarioData = await response.json();
+        return [usuarioData, asistencia];
+    };
+    const agregarTiempo = async (id, anterior) => {
+        const datos = {
+            "estadoSeguimiento": 3
+        }
+        const requestOptions = {
+            method: 'PATCH',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(datos)
+        };
+        const response = await fetch('https://td-g-production.up.railway.app/estado-seguimiento-cambio/' + anterior, requestOptions);
+        if (response.ok) {
+            setShowCorrecto(true)
+            setTimeout(() => {
+                window.location.reload();
+            }, 2000);
+        }
+    }
+
+    const noAsistencia = async (id, idEstado) => {
+        const dato = {
+            "compromiso": "NO ASISTIÓ",
+            "observacion": "NO ASISTIÓ",
+            "asistenciaEstudiante1": "0",
+            "asistenciaEstudiante2": "0",
+            "asistenciaEstudiante3": "0",
+        }
+        const requestOptions = {
+            method: 'PATCH',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(dato)
+        };
+        const response = await fetch('https://td-g-production.up.railway.app/seguimiento-ppi/' + id, requestOptions);
+        if (response.ok) {
+            const dato = {
+                "estadoSeguimiento": 2,
+            }
+            const requestOptions = {
+                method: 'PATCH',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(dato)
+            };
+            const response = await fetch('https://td-g-production.up.railway.app/estado-seguimiento-cambio/' + idEstado, requestOptions);
+            if (response.ok) {
+                setShowCorrecto2(true);
+                setTimeout(() => {
+                    window.location.reload();
+                }, 2000);
+            }
+        }
+
+    }
+
 
     useEffect(() => {
-        const fechData = async () => {
-            const response = await fetch('http://localhost:3002/equipo-ppi/' + params.id);
+        const fechData = async () => { 
+            const response = await fetch('https://td-g-production.up.railway.app/equipo-ppi/' + params.id);
             const data = await response.json();
             if (response.ok) {
-                const response2 = await fetch('http://localhost:3002/equipo-ppi-pjic/' + data[0].codigoEquipo);
+                const response2 = await fetch('https://td-g-production.up.railway.app/equipo-ppi-pjic/' + data[0].codigoEquipo);
                 const data2 = await response2.json();
                 setModSol(data2.usuariopjic);
                 setBitacora(data[0]);
@@ -43,7 +102,7 @@ function page({ params }) {
         }
 
         const semanas = async () => {
-            const response = await fetch('http://localhost:3002/semanas');
+            const response = await fetch('https://td-g-production.up.railway.app/semanas');
             const data = await response.json();
             if (response.ok) {
                 setSemanas(data)
@@ -56,12 +115,13 @@ function page({ params }) {
     }, [params]);
     useEffect(() => {
         const fetchData = async () => {
-            const response2 = await fetch('http://localhost:3002/equipo-usuarios/Estudiantes');
+            const response2 = await fetch('https://td-g-production.up.railway.app/equipo-usuarios/Estudiantes');
             const data2 = await response2.json();
             if (response2.ok) {
+                setEstudiantesAux(data2[bitacora.codigoEquipo])
                 setEstudiantes(data2);
                 if (bitacora.codigoEquipo != null) {
-                    const response = await fetch('http://localhost:3002/seguimiento-ppi/' + bitacora.codigoEquipo);
+                    const response = await fetch('https://td-g-production.up.railway.app/seguimiento-ppi/' + bitacora.codigoEquipo);
                     const data = await response.json();
                     if (response.ok) {
                         setSeguimiento(data);
@@ -110,11 +170,6 @@ function page({ params }) {
         traerEstado();
     }, [seguimiento]);
 
-    const fetchUsuario = async (usuarioId, asistencia) => {
-        const response = await fetch(`http://localhost:3002/usuario/${usuarioId}`);
-        const usuarioData = await response.json();
-        return [usuarioData, asistencia];
-    };
     useEffect(() => {
         if (showCorrecto2) {
             const timer = setTimeout(() => {
@@ -124,64 +179,6 @@ function page({ params }) {
             return () => clearTimeout(timer);
         }
     }, [showCorrecto2]);
-
-    const cifrado = (numero) => {
-        const converscrip = numero.toString();
-        const encriptacion = CryptoJS.AES.encrypt(converscrip, claveSecreta).toString();
-        return encriptacion;
-    }
-
-    const agregarTiempo = async (id, anterior) => {
-        const datos = {
-            "estadoSeguimiento": 3
-        }
-        const requestOptions = {
-            method: 'PATCH',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(datos)
-        };
-        const response = await fetch('http://localhost:3002/estado-seguimiento-cambio/' + anterior, requestOptions);
-        if (response.ok) {
-            setShowCorrecto(true)
-            setTimeout(() => {
-                window.location.reload();
-            }, 2000);
-        }
-    }
-
-    const noAsistencia = async (id, idEstado) => {
-        const dato = {
-            "compromiso": "NO ASISTIÓ",
-            "observacion": "NO ASISTIÓ",
-            "asistenciaEstudiante1": "0",
-            "asistenciaEstudiante2": "0",
-            "asistenciaEstudiante3": "0",
-        }
-        const requestOptions = {
-            method: 'PATCH',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(dato)
-        };
-        const response = await fetch('http://localhost:3002/seguimiento-ppi/' + id, requestOptions);
-        if (response.ok) {
-            const dato = {
-                "estadoSeguimiento": 2,
-            }
-            const requestOptions = {
-                method: 'PATCH',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(dato)
-            };
-            const response = await fetch('http://localhost:3002/estado-seguimiento-cambio/' + idEstado, requestOptions);
-            if (response.ok) {
-                setShowCorrecto2(true);
-                setTimeout(() => {
-                    window.location.reload();
-                }, 2000);
-            }
-        }
-
-    }
 
 
     return (
@@ -207,19 +204,10 @@ function page({ params }) {
                                     <span className="text-2xl font-bold text-gray-600">Estudiantes:</span>
                                     <div className="ml-5 sm:ml-10 mt-2 text-xl text-gray-400">
                                         {
-                                            Object.entries(estudiantes).map(([codigo, estudiantesArray]) => {
-                                                if (bitacora.codigoEquipo == codigo) {
-                                                    return estudiantesArray.map(estudiante => {
-                                                        return (
-                                                            <React.Fragment key={estudiante.id}>
-                                                                {estudiante.nombre} <br />
-                                                            </React.Fragment>
-                                                        );
-                                                    });
-                                                } else {
-                                                    return null; // Retorna null si no se cumple la condición
-                                                }
-                                            })
+                                            estudiantesAux && estudiantesAux.map((item) => (
+                                                <>{item.nombre}
+                                                    <br /></>
+                                            ))
                                         }
                                     </div>
                                 </div>
@@ -289,7 +277,7 @@ function page({ params }) {
                                         const citas = item.citas
                                         const asesor = citas.usuariocitaequipo
                                         const asistenciaEstudiantes = estudiantes[item.id]
-                                        let numSemana = item.semana
+                                        let numSemana = item.semana 
                                         estados.sort((a, b) => new Date(b.fecha) - new Date(a.fecha));
                                         return (
                                             <tr key={item.id}>
@@ -314,7 +302,7 @@ function page({ params }) {
                                                 <td className="whitespace-normal px-4 py-2 font-semibold text-center text-gray-400">{asesor.nombre} </td>
                                                 <td className="whitespace-normal px-4 py-2 text-center flex text-gray-700">
                                                     {
-                                                        estados[0].estadoSeguimiento.id == 3||(rol.id == 3 && asesor.id == 1 && estados[0].estadoSeguimiento.id == 1 && new Date(estados[0].fecha).getDate() == new Date().getDate()) ?
+                                                        estados[0].estadoSeguimiento.id == 3 || (rol.id == 3 && asesor.id == usuario.id && estados[0].estadoSeguimiento.id == 1 && new Date(estados[0].fecha).getDate() == new Date(fechaPruebas).getDate()) ?
                                                             (
                                                                 <><a href={'/component/seguimientos/modificar/' + item.id + '/' + estados[0].id} className=' flex items-center justify-center'>
                                                                     <div className='p-3 rounded-full bg-slate-600'>
