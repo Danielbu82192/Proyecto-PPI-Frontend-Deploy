@@ -57,7 +57,7 @@ function calendario() {
             if (index != 0) {
                 const nuevaFecha = new Date(fechaLunes);
                 nuevaFecha.setDate(fechaLunes.getDate() + index - 1);
-                setNumSemana(prev => [...prev, [diasConst[index], nuevaFecha.getDate()]]);
+                setNumSemana(prev => [...prev, [diasConst[index], nuevaFecha.getDate(),diasConst[index].substring(0,2)]]);
             }
         }
 
@@ -152,8 +152,8 @@ function calendario() {
                     numSemana.map((item) => (
                         <div key={item[1]} className='border-l border-gray-300 overflow-hidden'>
                             <p className="px-2 text-gray-400">{item[1]}</p>
-                            <p className="px-2 font-bold text-gray-700 text-xl text-ellipsis">{item[0]}</p>
-
+                            <p className="px-2 font-bold text-gray-700 text-xl hidden sm:block text-ellipsis">{item[0]}</p>
+                            <p className="px-2 font-bold text-gray-700 text-xl block sm:hidden text-ellipsis">{item[2]}</p>
                         </div>
                     ))
                 }
