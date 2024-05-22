@@ -230,7 +230,7 @@ function page({ params }) {
                 <div className='md:h-22 lg:h-22 xl:h-22 sm:h-22 border-b-2 pl-8 pb-5 pr-52 flex justify-between items-center'>
                     <div className='flex'>
                         <h1 className='text-3xl font-bold text-gray-600'>Asesor: </h1>
-                        <span className="text-3xl  text-gray-500 font-semibold px-3">
+                        <span className="text-xl  text-gray-500 font-semibold px-3">
                             {asesor.nombre}
                         </span>
                         <h1 className="text-3xl font-bold text-gray-600 pl-5">Horas Semanales:</h1>
