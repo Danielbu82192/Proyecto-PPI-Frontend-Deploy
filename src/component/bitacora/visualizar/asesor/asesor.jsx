@@ -91,7 +91,7 @@ export default function asesor() {
                   </p>
                 </div>
                 <div>
-                  <ul className='text-xl font-semibold ml-2 text-gray-400 list-disc'>
+                  <ul className='text-base font-semibold ml-2 text-gray-400 list-disc'>
                     {
                       Object.entries(estudiantes).map(([codigo, estudiantesArray]) => {
                         if (item.codigoEquipo == codigo) {
