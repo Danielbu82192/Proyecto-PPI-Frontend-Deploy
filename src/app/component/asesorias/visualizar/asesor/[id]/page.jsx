@@ -532,8 +532,8 @@ function page({ params }) {
 
         <div className="ml-6 mr-6 mt-6 border   bg-white border-b flex justify-between">
             <div className='pt-8  pb-8 w-full'>
-                <div className=' md:h-22 lg:h-22 xl:h-16 sm:h-22  border-b-2 pl-8 pr-80 items-start w-full flex '>
-                    <h1 className='text-4xl font-bold text-center text-gray-600'>Visualizar citas de asesorías</h1>
+                <div className='w-full border-b-2 flex flex-col sm:flex-row items-center sm:items-start justify-between sm:pl-8 sm:h-22 sm:pr-5 pb-5 text-center sm:text-left'>
+                    <h1 className='text-4xl font-bold text-gray-600 mb-2 sm:mb-0'>Visualizar citas de asesorías</h1>
                 </div>
 
                 {citaEstado.id == 1 ? (
@@ -702,20 +702,21 @@ function page({ params }) {
                                     </span>
                                 </div>
                             </div>
-                            <div className="text-center mt-5">
+                            <div className="text-center mt-5 flex flex-col items-center">
                                 <div>
                                     <h1 className="text-2xl sm:text-3xl font-bold text-gray-600">Estudiantes:</h1>
                                 </div>
-                                <div className='lg:mr-8'>
-                                    <ul>
+                                <div className='lg:mr-8 mt-3'>
+                                    <ul className="list-disc list-inside">
                                         {estudiantesEquipo && estudiantesEquipo.map((item) => (
-                                            <li key={item.id} className="text-base   text-gray-500 sm:mt-2 ml-2 sm:ml-4 font-semibold px-2 sm:px-3" style={{ maxWidth: "300px" }}>
-                                                &bull; {item.nombre}<br />
+                                            <li key={item.id} className="text-base text-gray-500 sm:mt-2 ml-2 sm:ml-4 font-semibold px-2 sm:px-3 max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg xl:max-w-xl">
+                                                {item.nombre}<br />
                                             </li>
                                         ))}
                                     </ul>
                                 </div>
                             </div>
+
 
 
                         </div>
@@ -790,18 +791,25 @@ function page({ params }) {
                                             </select>
                                         </div>
                                     </div>
-                                    <div className=" flex justify-center  ">
-                                        <button onClick={() => { cancelarCita(cita.id); }} class="text-white xl:mt-4 h-14 py-2 px-4 w-full rounded bg-emerald-400 hover:bg-emerald-500 shadow hover:shadow-lg font-medium transition transform hover:-translate-y-0.5 min-w-[250px] max-w-[250px]">Confirmar</button>
-                                        <button onClick={() => { setCancelar(false); }} class="text-white ml-5 xl:mt-4 h-14 py-2 px-4 w-full rounded bg-red-400 hover:bg-red-500 shadow hover:shadow-lg font-medium transition transform hover:-translate-y-0.5 min-w-[250px] max-w-[250px]">Cancelar</button>
-
+                                    <div className="flex flex-col pt-8    lg:flex-row justify-center">
+                                        <button onClick={() => { cancelarCita(cita.id); }} className="text-white h-14 py-2 px-4 w-full lg:w-auto rounded bg-emerald-400 hover:bg-emerald-500 shadow hover:shadow-lg font-medium transition transform hover:-translate-y-0.5 min-w-[250px] mb-4 lg:mb-0 lg:mr-5">
+                                            Confirmar
+                                        </button>
+                                        <button onClick={() => { setCancelar(false); }} className="text-white h-14 py-2 px-4 w-full lg:w-auto rounded bg-red-400 hover:bg-red-500 shadow hover:shadow-lg font-medium transition transform hover:-translate-y-0.5 min-w-[250px]">
+                                            Cancelar
+                                        </button>
                                     </div>
                                 </div>) : (
                                 citaEstado.id == 2 || citaEstado.id == 6 || citaEstado.id == 7 ? (
-                                    <div className="flex justify-center">
-                                        <button onClick={() => { verBitacora(equipo.id); }} class="text-white  h-14 py-2 px-4 w-full rounded bg-indigo-400 hover:bg-indigo-500 shadow hover:shadow-lg font-medium transition transform hover:-translate-y-0.5 min-w-[250px] max-w-[250px]">Ver Bitácora</button>
-                                        <button onClick={() => { setCancelar(true); /*cancelarCita(cita.id)*/ }} class="ml-5 text-white h-14 py-2 px-4 w-full rounded bg-red-400 hover:bg-red-500 shadow hover:shadow-lg font-medium transition transform hover:-translate-y-0.5 min-w-[250px] max-w-[250px]">Cancelar</button>
-
-                                    </div>) : (
+                                    <div className="flex flex-col   lg:flex-row justify-center">
+                                        <button onClick={() => { verBitacora(equipo.id); }} className="text-white h-14 py-2 px-4 w-full lg:w-auto rounded bg-indigo-400 hover:bg-indigo-500 shadow hover:shadow-lg font-medium transition transform hover:-translate-y-0.5 min-w-[250px] mb-4 lg:mb-0 lg:mr-5">
+                                            Ver Bitácora
+                                        </button>
+                                        <button onClick={() => { setCancelar(true); /*cancelarCita(cita.id)*/ }} className="text-white h-14 py-2 px-4 w-full lg:w-auto rounded bg-red-400 hover:bg-red-500 shadow hover:shadow-lg font-medium transition transform hover:-translate-y-0.5 min-w-[250px]">
+                                            Cancelar
+                                        </button>
+                                    </div>
+                                ) : (
                                     citaEstado.id == 3 ? (
                                         <div className="flex justify-center">
                                             <button onClick={() => { verAsesoria(cita.id) }} class="text-white h-14 py-2 px-4 w-full rounded bg-indigo-400 hover:bg-indigo-500 shadow hover:shadow-lg font-medium transition transform hover:-translate-y-0.5 min-w-[250px] max-w-[250px]">Ver asesoría</button>
