@@ -21,7 +21,7 @@ function page() {
     };
 
     const calcularSemanas = () => {
-        if(fechaInicio=="-1" && fechaFin=="-1"){
+        if (fechaInicio == "-1" && fechaFin == "-1") {
             return;
         }
         const fechaInicioParts = fechaInicio.split('-');
@@ -61,7 +61,7 @@ function page() {
     };
 
     const modificarSemana = (actual, value, index, item) => {
-       
+
         const fecha = value.split('-');
         const fechaAux = new Date(fecha[0], fecha[1] - 1, fecha[2]);
         /*if (actual > fechaAux) {
@@ -163,103 +163,116 @@ function page() {
     return (
         <div className="ml-6 mr-6 mt-6 border   bg-white border-b flex justify-between">
             <div className='pt-8  pb-8 w-full'>
-                <div className='md:h-22 lg:h-22 xl:h-22 sm:h-22 border-b-2 pl-8 pb-5 pr-52 flex justify-between items-center'>
-                    <div>
-                        <h1 className='text-4xl font-bold text-gray-600'>Semanas</h1>
-                    </div>
+
+
+                <div className='w-full border-b-2 flex flex-col sm:flex-row items-center sm:items-start justify-between sm:pl-8 sm:h-22 sm:pr-5 pb-5 text-center sm:text-left'>
+                    <h1 className='text-4xl font-bold text-gray-600 mb-2 sm:mb-0'>Semanas</h1>
                 </div>
                 <div className='p-10'>
-                    <div>
-                        <div className='grid grid-cols-4 py-2 px-10  border-t-2 border-b-2 border-gray-500'>
-                            <div className='text-xl font-semibold text-gray-600 text-center'>Semana</div>
-                            <div className='text-xl font-semibold text-gray-600 text-center'>Inicio</div>
-                            <div className='text-xl font-semibold text-gray-600 text-center'>Fin</div>
-                        </div>
-                        {semanasActual.map((item) => (
-                            // eslint-disable-next-line react/jsx-key
-                            <div className='grid grid-cols-4 py-2 px-10  border-b  border-gray-500'>
-                                <div className='text-xl font-semibold text-gray-600 text-center'>{item.numeroSemana}</div>
-                                <div className='text-xl font-semibold text-gray-600 text-center'>{format(item.fechaInicio, "dd/MM/yy")}</div>
-                                <div className='text-xl font-semibold text-gray-600 text-center'>{format(item.fechaFin, "dd/MM/yyy")}</div>
-                            </div>
-                        ))}
-
+                    <div className="overflow-x-auto">
+                        <table className="min-w-full divide-y divide-gray-200">
+                            <thead className="bg-gray-50">
+                                <tr>
+                                    <th scope="col" className="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Semana</th>
+                                    <th scope="col" className="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Inicio</th>
+                                    <th scope="col" className="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Fin</th>
+                                </tr>
+                            </thead>
+                            <tbody className="bg-white divide-y divide-gray-200">
+                                {semanasActual.map((item, index) => (
+                                    <tr key={index} className="hover:bg-gray-100">
+                                        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{item.numeroSemana}</td>
+                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{format(item.fechaInicio, "dd/MM/yy")}</td>
+                                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{format(item.fechaFin, "dd/MM/yyy")}</td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
                     </div>
-                    <div className='mt-5 grid grid-cols-2'>
-                        <div className='mr-5'>
-                            <label class=" text-lg font-medium text-gray-700"> Semana Inicio </label>
 
+                    <div className='mt-5 grid grid-cols-1 sm:grid-cols-2 gap-5'>
+                        <div className=''>
+                            <label htmlFor="fechaInicio" className="block text-lg font-medium text-gray-700">Semana Inicio</label>
                             <input
                                 type="date"
+                                id="fechaInicio"
                                 onChange={(e) => { setFechaInicio(e.target.value) }}
-                                class="mt-1 w-full rounded-md border-gray-200 shadow-sm sm:text-sm"
+                                className="mt-1 w-full rounded-md border-gray-200 shadow-sm sm:text-sm"
                             />
                         </div>
-                        <div className='ml-5'>
-                            <label class=" text-lg font-medium text-gray-700"> Semana Final </label>
-
+                        <div className=''>
+                            <label htmlFor="fechaFin" className="block text-lg font-medium text-gray-700">Semana Final</label>
                             <input
                                 type="date"
+                                id="fechaFin"
                                 onChange={(e) => { setFechaFin(e.target.value) }}
-                                class="mt-1 w-full rounded-md border-gray-200 shadow-sm sm:text-sm"
+                                className="mt-1 w-full rounded-md border-gray-200 shadow-sm sm:text-sm"
                             />
                         </div>
                     </div>
-                    <div className="sm:m-10 ">
+
+                    <div className="sm:m-10 mt-5">
                         <button onClick={() => { calcularSemanas(); }} class="text-white xl:mt-4 h-14 py-2 px-4 w-full rounded bg-orange-400 hover:bg-orange-500 shadow hover:shadow-lg font-medium transition transform hover:-translate-y-0.5">Calcular</button>
                     </div>
                 </div>
                 <div >
                     {estadoCrear ? (
-                        <><div>
-                            <div className='grid grid-cols-4 py-2 px-10  border-t-2 border-b-2 border-gray-500'>
-                                <div className='text-xl font-semibold text-gray-600 text-center'>Modificar</div>
-                                <div className='text-xl font-semibold text-gray-600 text-center'>Semana</div>
-                                <div className='text-xl font-semibold text-gray-600 text-center'>Inicio</div>
-                                <div className='text-xl font-semibold text-gray-600 text-center'>Fin</div>
-                            </div>
-                            <div className='grid grid-cols-4 items-center'>
-                                {semanas.map((item, index) => (
-
-                                    <>
-                                        <div className="flex justify-center items-center" key={index}>
-                                            <label
-                                                htmlFor={`week-checkbox-${index}`}
-                                                className="relative h-8 w-14 cursor-pointer rounded-full bg-gray-300 transition [-webkit-tap-highlight-color:_transparent] has-[:checked]:bg-green-500 flex justify-center  items-center"
-                                            >
+                        <><div className="overflow-x-auto">
+                            <table className="min-w-full divide-y divide-gray-200" >
+                                <thead className="bg-gray-50">
+                                    <tr>
+                                        <th scope="col" className="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Modificar</th>
+                                        <th scope="col" className="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Semana</th>
+                                        <th scope="col" className="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Inicio</th>
+                                        <th scope="col" className="px-6 py-3 text-left text-xs font-bold text-gray-500 uppercase tracking-wider">Fin</th>
+                                    </tr>
+                                </thead>
+                                <tbody className="bg-white divide-y divide-gray-200">
+                                    {semanas.map((item, index) => (
+                                        <tr key={index}>
+                                            <td className="flex justify-center items-center">
+                                                <label
+                                                    htmlFor={`week-checkbox-${index}`}
+                                                    className="relative h-8 w-14 cursor-pointer rounded-full bg-gray-300 transition [-webkit-tap-highlight-color:_transparent] has-[:checked]:bg-green-500 flex justify-center items-center"
+                                                >
+                                                    <input
+                                                        type="checkbox"
+                                                        checked={edicionHabilitada[index]}
+                                                        onChange={() => handleCheckboxChange(index)}
+                                                        id={`week-checkbox-${index}`}
+                                                        className="peer sr-only" />
+                                                    <span className="absolute inset-y-0 start-0 m-1 size-6 rounded-full bg-white transition-all peer-checked:start-6"></span>
+                                                </label>
+                                            </td>
+                                            <td className='text-xl font-semibold text-gray-600 text-center'>{index + 1}</td>
+                                            <td className='text-xl font-semibold text-gray-600 text-center'>
                                                 <input
-                                                    type="checkbox"
-                                                    checked={edicionHabilitada[index]}
-                                                    onChange={() => handleCheckboxChange(index)}
-                                                    id={`week-checkbox-${index}`}
-                                                    className="peer sr-only" />
-                                                <span className="absolute inset-y-0 start-0 m-1 size-6 rounded-full bg-white transition-all peer-checked:start-6"></span>
-                                            </label>
-                                        </div>
-                                        <div className='text-xl font-semibold text-gray-600 text-center'>{index + 1}</div>
-                                        <div className='text-xl font-semibold text-gray-600 text-center'>
-                                            <input
-                                                type="date"
-                                                id={index + " " + 0}
-                                                onChange={(e) => { modificarSemana(item[0], e.target.value, index, 0) }}
-                                                value={item[0].toLocaleDateString('en-CA')}
-                                                disabled={!edicionHabilitada[index]}
-                                                className="mt-1 w-full rounded-md border-gray-200 shadow-sm sm:text-sm" />
-                                        </div><div className='text-xl font-semibold text-gray-600 text-center'>
-                                            <input
-                                                type="date"
-                                                onChange={(e) => { item[1] = e.target.value }}
-                                                value={item[1].toLocaleDateString('en-CA')}
-                                                disabled={true}
-                                                className="mt-1 w-full rounded-md border-gray-200 shadow-sm sm:text-sm" />
-                                        </div></>
-
-                                ))}
+                                                    type="date"
+                                                    id={index + " " + 0}
+                                                    onChange={(e) => { modificarSemana(item[0], e.target.value, index, 0) }}
+                                                    value={item[0].toLocaleDateString('en-CA')}
+                                                    disabled={!edicionHabilitada[index]}
+                                                    className="mt-1 w-full rounded-md border-gray-200 shadow-sm sm:text-sm" />
+                                            </td>
+                                            <td className='text-xl font-semibold text-gray-600 text-center'>
+                                                <input
+                                                    type="date"
+                                                    onChange={(e) => { item[1] = e.target.value }}
+                                                    value={item[1].toLocaleDateString('en-CA')}
+                                                    disabled={true}
+                                                    className="mt-1 w-full rounded-md border-gray-200 shadow-sm sm:text-sm" />
+                                            </td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        </div>
+                            <div className="sm:m-10 mt-5">
+                                <button onClick={() => { crearSemana() }} className="text-white xl:mt-4 h-14 py-2 px-4 w-full rounded bg-green-400 hover:bg-green-500 shadow hover:shadow-lg font-medium transition transform hover:-translate-y-0.5">Crear</button>
                             </div>
-                        </div><div className="sm:m-10 ">
-                                <button onClick={() => { crearSemana() }} class="text-white xl:mt-4 h-14 py-2 px-4 w-full rounded bg-green-400 hover:bg-green-500 shadow hover:shadow-lg font-medium transition transform hover:-translate-y-0.5">Crear</button>
-                            </div></>
-                    ) : (null)}
+                        </>
+                    ) : null}
+
                 </div>
             </div>
             {showAlert && (
