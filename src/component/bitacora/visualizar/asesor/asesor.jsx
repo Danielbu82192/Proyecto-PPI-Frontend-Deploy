@@ -59,46 +59,36 @@ export default function asesor() {
             className="mt-1 pl-10 pr-4 py-2 w-full border-2 rounded-md border-gray-300 shadow-sm sm:text-sm"
           />
         </div>
-      </div> 
-      <div className='grid mt-5 grid-cols-1'> 
+      </div>
+      <div className='grid mt-5 grid-cols-1'>
         {auxBitacoras.map((item) => (
           <a key={item.id} href={'/component/bitacora/visualizar/asesor/' + item.id}>
-            <div className='px-5 grid xl:grid-cols-3 lg:grid-cols-3 sm:grid-cols-3 grid-cols-1 items-center cursor-pointer border-2 my-2 border-gray-300 rounded-lg shadow-md hover:shadow-lg p-4'>
-              <div className='mb-4 sm:mb-0 sm:mr-4 col-span-1'>
-                <span className='text-xl font-bold text-gray-600'>
-                  Equipo:
-                </span>
-                <span className='ml-2 text-xl font-semibold text-gray-400'>
-                  {item.codigoEquipo}
-                </span>
-              </div>
-              <div className='grid grid-cols-1 xl:grid-cols-1 col-span-1 xl:col-span-1 xl:ml-5'>
-                <div className='flex justify-center items-center'>
-                  <p className='text-xl font-bold text-gray-600'>
-                    Nombre Proyecto:
-                    </p>
+            <div className='px-5 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-2 items-center cursor-pointer border-2 my-2 border-gray-300 rounded-lg shadow-md hover:shadow-lg p-4'>
+              <div className='grid grid-cols-1 sm:grid-cols-2 items-center'>
+                <div className='mb-4 sm:mb-0 sm:mr-4 text-center'>
+                  <span className='text-xl font-bold text-gray-600'>Equipo:</span>
+                  <span className='ml-2 text-xl font-semibold text-gray-400'>{item.codigoEquipo}</span>
                 </div>
-                <div>
-                  <span className='ml-2 text-xl font-semibold text-gray-400'>
-                    {item.nombre}
-                  </span>
+                <div className='mb-4 sm:mb-0 sm:mr-4 text-center'>
+                  <div className='flex text-center justify-center items-center'>
+                    <p className='text-xl font-bold text-gray-600'>Nombre Proyecto:</p>
+                  </div>
+                  <div>
+                    <span className='ml-2 text-center text-xl font-semibold text-gray-400'>{item.nombre}</span>
+                  </div>
                 </div>
               </div>
-              <div className='grid grid-cols-1 xl:grid-cols-1 col-span-1 xl:col-span-1 xl:ml-5'>
+              <div className='grid grid-cols-1 col-span-1 xl:col-span-1 xl:ml-5'>
                 <div className='flex justify-center items-center'>
-                  <p className='text-xl font-bold text-gray-600'>
-                    Estudiantes:
-                  </p>
+                  <p className='text-xl font-bold text-gray-600'>Estudiantes:</p>
                 </div>
-                <div>
-                  <ul className='text-base font-semibold ml-2 text-gray-400 list-disc'>
+                <div className='flex justify-center items-center'>
+                  <ul className='text-base ml-2 font-semibold text-gray-400 list-disc'>
                     {
                       Object.entries(estudiantes).map(([codigo, estudiantesArray]) => {
                         if (item.codigoEquipo == codigo) {
                           return estudiantesArray.map(estudiante => (
-                            <li key={estudiante.id}>
-                              {estudiante.nombre} <br />
-                            </li>
+                            <li key={estudiante.id}>{estudiante.nombre}<br /></li>
                           ));
                         } else {
                           return null; // Retorna null si no se cumple la condición
@@ -108,10 +98,14 @@ export default function asesor() {
                   </ul>
                 </div>
               </div>
-            </div> 
+            </div>
+
           </a>
-        ))} 
+        ))}
       </div>
+
+
+
     </div>
   )
 }
