@@ -246,8 +246,8 @@ export default function page() {
                         setShowAlert(true);
                         return;
                     }
-                } 
-                const minActual = ((fecha.getHours()+2) * 60) + fecha.getMinutes()
+                }
+                const minActual = ((fecha.getHours() + 2) * 60) + fecha.getMinutes()
                 const minSelect = (parseInt(horaMinutos.split(':')[0]) * 60) + parseInt(horaMinutos.split(':')[1])
 
                 if (fecha.getDay() > parseInt(fechaSeleccionada)) {
@@ -256,11 +256,11 @@ export default function page() {
                 }
 
                 if (fecha.getDay() == parseInt(fechaSeleccionada)) {
-                    if (minSelect-minActual < 0) {
+                    if (minSelect - minActual < 0) {
                         setShowAnterior(true)
                         return
                     }
-                } 
+                }
                 /*date: string, dateTime: string, attendees: string[], conferenceDataVersion: string*/
 
                 const fechaMeet = new Date(fechaPruebas)
@@ -489,8 +489,9 @@ export default function page() {
         <>
             <div className="ml-6 mr-6 mt-6 border   bg-white border-b flex justify-between">
                 <div className='pt-8  pb-8 w-full'>
-                    <div className='md:h-22 lg:h-22 xl:h-16 sm:h-22 border-b-2 pl-8 pr-8 flex justify-between items-start w-full'>
-                        <h1 className='text-4xl font-bold text-gray-600'>Agendamiento citas de asesorías</h1>
+
+                    <div className='w-full border-b-2 flex flex-col sm:flex-row items-center sm:items-start justify-between sm:pl-8 sm:h-22 sm:pr-5 pb-5 text-center sm:text-left'>
+                        <h1 className='text-4xl font-bold text-gray-600 mb-2 sm:mb-0'>Agendamiento citas de asesorías</h1>
                         <div className='text-4xl text-gray-600'>Semana {semanaSeleccionada.numeroSemana} {monthName.charAt(0).toUpperCase() + monthName.slice(1)} {numeroDia}</div>
                     </div>
 
@@ -518,21 +519,21 @@ export default function page() {
                             <div className='mt-5'>
                                 <h1 className='text-3xl font-bold text-center text-gray-600'>Selecciona el dia:</h1>
                                 <div class="justify-center flex pt-8">
-                                    <div className='grid grid-cols-1 pl-14 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3   xl:flex gap-4'>
+                                    <div className='w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 xl:w-4/5 gap-4 justify-items-center'>
                                         <div className='px-2 py-4'>
                                             <input onChange={(e) => { cargarHoras(0) }} type="radio" id='Lunes' name="dia-semana" className="peer hidden" disabled />
                                             <label htmlFor='Lunes' id='LbLunes' className="labeldsabilitado select-none cursor-pointer rounded-lg border-2 border-blue-500
-        py-3 px-6 font-bold text-blue-500 transition-colors duration-200 ease-in-out peer-checked:bg-blue-500 peer-checked:text-white peer-checked:border-blue-200"> Lunes</label>
+            py-3 px-6 font-bold text-blue-500 transition-colors duration-200 ease-in-out peer-checked:bg-blue-500 peer-checked:text-white peer-checked:border-blue-200"> Lunes</label>
                                         </div>
                                         <div className='px-2 py-4'>
                                             <input onChange={(e) => { cargarHoras(1) }} type="radio" id='Martes' name="dia-semana" className="peer hidden" disabled />
                                             <label htmlFor='Martes' id='LbMartes' className="labeldsabilitado select-none cursor-pointer rounded-lg border-2 border-blue-500
-        py-3 px-6 font-bold text-blue-500 transition-colors duration-200 ease-in-out peer-checked:bg-blue-500 peer-checked:text-white peer-checked:border-blue-200"> Martes</label>
+            py-3 px-6 font-bold text-blue-500 transition-colors duration-200 ease-in-out peer-checked:bg-blue-500 peer-checked:text-white peer-checked:border-blue-200"> Martes</label>
                                         </div>
                                         <div className='px-2 py-4'>
                                             <input onChange={(e) => { cargarHoras(2) }} type="radio" id='Miercoles' name="dia-semana" className="peer hidden" disabled />
                                             <label htmlFor='Miercoles' id='LbMiercoles' className="labeldsabilitado select-none cursor-pointer rounded-lg border-2 border-blue-500
-        py-3 px-6 font-bold text-blue-500 transition-colors duration-200 ease-in-out peer-checked:bg-blue-500 peer-checked:text-white peer-checked:border-blue-200"> Miercoles</label>
+            py-3 px-6 font-bold text-blue-500 transition-colors duration-200 ease-in-out peer-checked:bg-blue-500 peer-checked:text-white peer-checked:border-blue-200"> Miercoles</label>
                                         </div>
                                         <div className='px-2 py-4'>
                                             <input onChange={(e) => { cargarHoras(3) }} type="radio" id='Jueves' name="dia-semana" className="peer hidden" disabled />
@@ -551,6 +552,7 @@ export default function page() {
                                         </div>
                                     </div>
                                 </div>
+
                             </div>
                             <div className='mt-5'>
                                 <h1 className='text-3xl font-bold text-center text-gray-600'>Selecciona la hora:</h1>
