@@ -3,14 +3,12 @@
 @tailwind utilities;
 
 div[aria-roledescription="carousel"] {
-    width: 74vw !important;
-    height: 22vw !important;
+    width: 100%;
     border-radius: .5rem;
     cursor: pointer;
 }
 
 div[aria-roledescription="carousel"]:not(:hover) {
-
     div[data-type="prev"],
     div[data-type="next"] {
         transition: 500ms linear;
@@ -36,9 +34,6 @@ div.react-slideshow-fadezoom-images-wrap {
 }
 
 div[aria-roledescription="slide"] {
-    width: 74vw !important;
-    height: 18vw !important;
-    display: flex !important;
     display: flex !important;
     flex-direction: row;
     justify-content: center;
