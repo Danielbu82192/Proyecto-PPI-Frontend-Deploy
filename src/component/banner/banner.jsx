@@ -148,13 +148,7 @@ const SlideNewsCard = () => {
 
     if (news.length > 0) {
         return (
-            <div className="flex flex-row md:flex-nowrap flex-wrap w-full min-h-max justify-start overflow-x-auto gap-x-4"
-                style={{
-                    scrollbarColor: "whitegrey white",
-                    msScrollbarShadowColor: "whitegrey",
-                    msScrollbarTrackShadowColor: "whitegrey",
-                    msScrollbarTrackColor: "whitegrey",
-                }}>
+            <div class="flex flex-row md:flex-nowrap flex-wrap p-2 w-full h-max md:justify-start justify-evenly overflow-x-auto md:gap-x-4 gap-4">
                 {news.map((each, index) => (
                     <NewCard key={index} newTitle={each.nombre} newContent={each.contenidoBanner} newImage={`https://td-g-production.up.railway.app${each.urlImagen}`} />
                 ))}
