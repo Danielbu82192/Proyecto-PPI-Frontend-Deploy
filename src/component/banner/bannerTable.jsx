@@ -126,7 +126,7 @@ function BannerTable() {
                                                         </svg>
                                                     }
                                                 </button>
-                                                <a href={`http://localhost:3000/component/banner/modificar/${item.id}`} className="">
+                                                <a href={`https://frontend.dbcpolijic2024.online/component/banner/modificar/${item.id}`} className="">
                                                     <div className="p-1 rounded-full bg-gray-600">
                                                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="white" className="w-6 h-6">
                                                             <path strokeLinecap="round" strokeLinejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10" />
@@ -151,7 +151,7 @@ function BannerTable() {
                 </table>
             </div>
             <div className="w-full flex flex-col items-center justify-center content-center">
-                <button className='text-white m-4 py-2 px-4 w-[25%] rounded bg-green-400 hover:bg-green-500 shadow hover:shadow-lg font-medium transition transform hover:-translate-y-0.5 flex justify-center' onClick={() => window.location.href = 'http://localhost:3000/component/banner/crear'}>
+                <button className='text-white m-4 py-2 px-4 w-[25%] rounded bg-green-400 hover:bg-green-500 shadow hover:shadow-lg font-medium transition transform hover:-translate-y-0.5 flex justify-center' onClick={() => window.location.href = 'https://frontend.dbcpolijic2024.online/component/banner/crear'}>
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
                         <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
                     </svg>

@@ -41,7 +41,7 @@ function crearBitacora({ equipo }) {
         console.log('Opciones de la solicitud:', requestOptions);
 
         try {
-            const url = 'http://localhost:3002/equipo-ppi/' + bitacora.id;
+            const url = 'https://td-g-production.up.railway.app/equipo-ppi/' + bitacora.id;
             //alert(`Enviando solicitud a: ${url}`); // Para fines de depuración, puedes eliminarlo si no es necesario.
             const response = await fetch(url, requestOptions);
 
