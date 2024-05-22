@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-key */
 "use client"
 /* eslint-disable react-hooks/rules-of-hooks */
 import React, { useState, useEffect } from 'react'
@@ -112,40 +113,37 @@ function modSol() {
                         <input type="radio" id='Completados' onChange={() => { filtroRadio(2) }} name="FiltroRadio" className=" peer hidden" />
                         <label htmlFor='Completados' className=" cursor-pointer rounded-lg text-sm border-2 border-emerald-500 py-2 px-5 font-bold text-emerald-500 transition-colors duration-200 ease-in-out peer-checked:bg-emerald-500 peer-checked:text-white peer-checked:border-emerald-500">Completados</label>
                     </div>
-                    <div className=' sm:py-4'>
+                    <div className='    py-4'>
                         <input type="radio" id='Pendientes' name="FiltroRadio" onChange={() => { filtroRadio(3) }} className=" peer hidden" />
                         <label htmlFor='Pendientes' className=" cursor-pointer rounded-md text-sm border-2 border-red-500 py-2 px-5    font-bold text-red-500 transition-colors duration-200 ease-in-out peer-checked:bg-red-500 peer-checked:text-white peer-checked:border-red-500">Pendientes</label>
                     </div>
                 </div>
             </div>
             <div className='mt-5'>
-                <div className='grid grid-cols-2 sm:grid-cols-4   xl:grid-cols-9 gap-5'>
+                <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-9 gap-5 justify-items-center'>
                     {Object.entries(auxEquipo).map(([key, value]) => {
-                        const bitacora = value.bitacora
-                        const modSol = value.moduloSol[0]
+                        const bitacora = value.bitacora;
+                        const modSol = value.moduloSol[0];
                         if (usuarioSol != null) {
                             if (modSol.id == usuarioSol.id) {
                                 return (
-                                    <div key={key} className='sm:mt-3'>
+                                    <div key={key} className='mt-3'>
                                         <a href={'/component/bitacora/visualizar/modSol/' + key} className={bitacora.length == 0 ? 'py-3 px-10 cursor-pointer rounded-xl text-lg border-2 font-bold text-red-600 border-red-600 hover:text-white hover:border-red-600 hover:bg-red-600' : 'py-3 px-10 rounded-xl text-lg border-2 font-bold text-emerald-600 border-emerald-600 hover:text-white hover:border-emerald-600 hover:bg-emerald-600'}>
                                             {key}
                                         </a>
-
                                     </div>
-                                )
+                                );
                             }
                         } else {
                             return (
-                                <>
+                                <div className="col-span-full text-center">
                                     <h1>No hay equipos creados a tu nombre</h1>
-                                </>
-                            )
+                                </div>
+                            );
                         }
                     })}
-
-
-
                 </div>
+
             </div>
 
         </div>
