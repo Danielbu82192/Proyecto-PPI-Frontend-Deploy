@@ -189,7 +189,7 @@ function page({ params }) {
             dataAux.push({ value: -1, label: "Todos " })
             data3.forEach(element => {
                 dataAux.push({ value: element.numeroSemana, label: "Semana " + element.numeroSemana })
-            }); 
+            });
             setSemanaSelect(dataAux)
             setSemana(data3)
 
@@ -227,22 +227,30 @@ function page({ params }) {
     return (
         <div className="ml-6 mr-6 mt-6 border   bg-white border-b flex justify-between">
             <div className='pt-8  pb-8 w-full'>
-                <div className='md:h-22 lg:h-22 xl:h-22 sm:h-22 border-b-2 pl-8 pb-5 pr-52 flex justify-between items-center'>
-                    <div className='flex'>
-                        <h1 className='text-3xl font-bold text-gray-600'>Asesor: </h1>
-                        <span className="text-xl  text-gray-500 font-semibold px-3">
-                            {asesor.nombre}
-                        </span>
-                        <h1 className="text-3xl font-bold text-gray-600 pl-5">Horas Semanales:</h1>
-                        <span className="text-3xl text-gray-500 font-semibold pr-3 pl-1">
-                            {horas.horasAsignadas}
-                        </span>
-                        <h1 className="text-3xl font-bold text-gray-600 pl-5">Citas Semanales:</h1>
-                        <span className="text-3xl text-gray-500 font-semibold pr-3 pl-1">
-                            {horas.horasAsignadas * 3}
-                        </span>
+                <div className='sm:px-8 border-b-2 pb-5'>
+                    <div className='grid grid-cols-1 sm:grid-cols-3 sm:gap-4'>
+                        <div className="flex flex-col text-center mb-4 sm:mb-0">
+                            <h1 className='text-3xl font-bold text-gray-600'>Asesor:</h1>
+                            <span className="text-2xl text-gray-500 font-semibold px-3 sm:px-0 sm:pt-1">
+                                {asesor.nombre}
+                            </span>
+                        </div>
+                        <div className="flex flex-col text-center mb-4 sm:mb-0">
+                            <h1 className="text-3xl font-bold text-gray-600">Horas Semanales:</h1>
+                            <span className="text-3xl text-gray-500 font-semibold pl-1 sm:pl-0 sm:pt-1">
+                                {horas.horasAsignadas}
+                            </span>
+                        </div>
+                        <div className="flex flex-col text-center">
+                            <h1 className="text-3xl font-bold text-gray-600">Citas Semanales:</h1>
+                            <span className="text-3xl text-gray-500 font-semibold pl-1 sm:pl-0 sm:pt-1">
+                                {horas.horasAsignadas * 3}
+                            </span>
+                        </div>
                     </div>
                 </div>
+
+
                 <div className='p-10'>
                     <div className=''>
                         <div className="text-center">
@@ -270,7 +278,7 @@ function page({ params }) {
                                 isSearchable={true}
                                 name="Semana"
                                 options={semanaSelect}
-                                onChange={(option) => { if (option != null) filtroSemana(option.value); else filtroSemana(semanaSeleccionadaAux.numeroSemana)}}
+                                onChange={(option) => { if (option != null) filtroSemana(option.value); else filtroSemana(semanaSeleccionadaAux.numeroSemana) }}
                             />
 
                             {/*
