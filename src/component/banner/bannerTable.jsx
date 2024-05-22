@@ -203,7 +203,7 @@ function BannerTable() {
                         <p class="mt-2 text-sm text-gray-800">
                             Esta acción puede implicar una perdidad irreversible de dicha información, ¿desea continuar?.
                         </p>
-                        <div class="mt-4 flex flex-row flex-wrap gap-2 min-w-full items-center content-center justify-center gap-2">
+                        <div class="mt-4 flex flex-row flex-wrap min-w-full items-center content-center justify-center gap-2">
                             <button type="button" class="min-w-[25%] rounded-lg bg-green-200 px-4 py-2 text-sm font-medium text-green-600" onClick={() => handleConfirm(true)}>
                                 Confirmar
                             </button>
