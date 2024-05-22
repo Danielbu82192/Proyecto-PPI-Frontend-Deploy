@@ -89,31 +89,25 @@ function page() {
     return (<div className="relative flex flex-col items-center min-h-screen justify-center">
         <div className="flex flex-column items-center justify-self-center">
             <div className="absolute h-screen inset-0 bg-cover bg-center">
-                <Image src={'/Media/img/Landing.png'} alt="Background" priority={true} loading="eager"
-                    layout="fill" objectFit="cover" quality={100} />
+                <Image src={'/Media/img/Landing.png'} alt="" loading="eager" fill style={{ objectFit: 'cover' }} quality={100} />
             </div >
-            <div className="relative container mx-auto px-6 text-gray-500 md:px-12 xl:px-40">
-                <div className="mx-auto md:w-[60vw] lg:w-8/12 xl:w-8/12">
-                    <div className="rounded-xl bg-white shadow-xl">
-                        <div className="p-6 sm:p-16">
-                            <div className="relative flex flex-col items-center justify-center">
-                                <Image src={"/Media/img/Escudo.png"} priority={true} loading="eager"
-                                    width={300} height={300} style={{ width: "auto", height: "auto" }} alt="POLIJIC logo" />
-                                <p className="mt-8 mx-0 text-2xl text-gray-600 font-bold text-center">Sistema de gestión del PPI</p>
+            <div className="relative container mx-auto text-gray-500">
+                <div className="landscape:w-[40vw] landscape:h-[85vh] portrait:w-[80vw] portrait:h-[45vh] flex flex-col items-center justify-center">
+                    <div className="rounded-xl bg-white shadow-xl w-full h-full">
+                        <div className="flex flex-col gap-2 p-4 w-full h-full justify-evenly items-center">
+                            <div className="relative flex flex-col items-center justify-center w-full h-[40%]">
+                                <img src="/Media/img/Escudo.png" className="h-full object-scale-down" loading="eager" />
                             </div>
-                            <div className="mt-10 grid gap-y-4">
-                                <p className="text-sm text-gray-600 font-bold text-center">Usa tu correo institucional para iniciar sesion</p>
-                                <button className="group h-12 px-6 border-2 border-gray-300 rounded-full transition duration-2clea00
+                            <p className="text-xl text-gray-600 font-bold text-center">Sistema de gestión del PPI</p>
+                            <p className="text-sm text-gray-600 font-bold text-center">Usa tu correo institucional para iniciar sesion</p>
+                            <button className="flex flex-row items-center gap-2 group h-12 px-6 border-2 border-gray-300 rounded-full transition duration-2clea00
                                      hover:border-blue-400 focus:bg-blue-50 active:bg-blue-100" onClick={handleLogin}>
-                                    <div className="relative flex items-center space-x-4 justify-center">
-                                        <Image src="/Media/img/G.png" className="absolute left-0 w-5" priority={true}
-                                            loading="eager" width={20} height={20} alt="google logo" />
-                                        <span className="block w-max font-semibold tracking-wide text-gray-700 
-                                            text-sm transition duration-300 group-hover:text-blue-600 sm:text-base">Iniciar con Google</span>
-                                    </div>
-                                </button>
-                            </div>
-                            <div className="mt-10 space-y-4 text-gray-600 text-center sm:-mb-8">
+                                <img src="/Media/img/G.png" className="left-0 w-5 object-scale-down" loading="eager" />
+                                <span className="block w-max font-semibold tracking-wide text-gray-700 
+                                            text-sm transition duration-300 group-hover:text-blue-600 sm:text-base">
+                                    Iniciar con Google</span>
+                            </button>
+                            <div className="space-y-4 text-gray-600 text-center">
                                 <p className="text-xs">Al continuar, acepta nuestros <a href="#" className="underline">Términos de uso</a>
                                     y confirma que ha leído nuestra <a href="#" className="underline">Declaración de privacidad</a>.</p>
                             </div>
