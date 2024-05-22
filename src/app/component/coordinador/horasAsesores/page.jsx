@@ -220,11 +220,9 @@ function page() {
     return (
         <div className="ml-6 mr-6 mt-6 border bg-white border-b flex justify-between">
             <div className='pt-8 pb-8 w-full'>
-                <div className='md:h-22 lg:h-22 xl:h-22 sm:h-22 border-b-2 pl-8 pb-5 pr-52 flex justify-between items-center'>
-                    <div>
-                        <h1 className='text-4xl font-bold text-gray-600'>Horas Asesores</h1>
-                    </div>
-                    <div className="flex items-center">
+                <div className='w-full border-b-2 flex flex-col sm:flex-row items-center sm:items-start justify-between sm:pl-8 sm:h-22 sm:pr-5 pb-5 text-center sm:text-left'>
+                    <h1 className='text-4xl font-bold text-gray-600 mb-2 sm:mb-0'>Horas Asesores</h1>
+                    <div className=' flex items-center'>
                         <button
                             onClick={() => { ModSemana(1) }}
                             className="inline-flex size-8 items-center justify-center rounded border border-gray-100 bg-white text-gray-900 rtl:rotate-180"
@@ -269,14 +267,7 @@ function page() {
                 <div className='p-10'>
                     <div>
                         <div className="flex items-center w-full">
-                            <div onClick={() => { setFiltroRario(!filtroRadio); setAuxAsesor(asesor) }} className={`cursor-pointer  flex justify-center items-center border-2 rounded-md  p-1.5 ${filtroRadio ? ('bg-red-400 border-red-400') : ('border-gray-300')}`}>
-                                {filtroRadio ? (<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="white" class="w-6 h-6">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
-                                </svg>
-                                ) : (<svg xmlns="http://www.w3.org/2000/svg" fill="none" width="24" height="24" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor">
-                                    <path strokeLinecap="round" strokeLinejoin="round" d="M12 3c2.755 0 5.455.232 8.083.678.533.09.917.556.917 1.096v1.044a2.25 2.25 0 0 1-.659 1.591l-5.432 5.432a2.25 2.25 0 0 0-.659 1.591v2.927a2.25 2.25 0 0 1-1.244 2.013L9.75 21v-6.568a2.25 2.25 0 0 0-.659-1.591L3.659 7.409A2.25 2.25 0 0 1 3 5.818V4.774c0-.54.384-1.006.917-1.096A48.32 48.32 0 0 1 12 3Z" />
-                                </svg>)}
-                            </div>
+                            
 
                             <div className="relative flex items-center flex-grow ml-3">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" className="absolute left-0 top-1/2 transform -translate-y-1/2 ml-3" style={{ fill: 'rgb(75 85 99)' }}>
@@ -291,35 +282,7 @@ function page() {
                                 />
                             </div>
                         </div>
-                        {
-                            filtroRadio ? (<div className='flex flex-wrap gap-3 mt-2'>
-                                <div className=' sm:py-4'>
-                                    <input defaultChecked type="radio" onChange={() => { filtroRadioOp(0) }} id='Todos' name="FiltroRadio" className=" peer hidden" />
-                                    <label htmlFor='Todos' className=" cursor-pointer rounded-lg border-2 text-sm border-gray-500 py-2 px-5 font-bold text-slate-950 transition-colors duration-200 ease-in-out peer-checked:bg-slate-950 peer-checked:text-white peer-checked:border-slate-950">Todos</label>
-                                </div>
-
-                                <div className=' sm:py-4'>
-                                    <input type="radio" id='Disponible' onChange={() => { filtroRadioOp(1) }} name="FiltroRadio" className=" peer hidden" />
-                                    <label htmlFor='Disponible' className=" cursor-pointer rounded-lg text-sm border-2 border-gray-500 py-2 px-5 font-bold text-gray-500 transition-colors duration-200 ease-in-out peer-checked:bg-gray-500 peer-checked:text-white peer-checked:border-gray-500">Disponible</label>
-                                </div>
-                                <div className=' sm:py-4'>
-                                    <input type="radio" id='Reservado' name="FiltroRadio" onChange={() => { filtroRadioOp(2) }} className=" peer hidden" />
-                                    <label htmlFor='Reservado' className=" cursor-pointer rounded-md text-sm border-2 border-emerald-500 py-2 px-5    font-bold text-emerald-500 transition-colors duration-200 ease-in-out peer-checked:bg-emerald-500 peer-checked:text-white peer-checked:border-emerald-500">Reservado</label>
-                                </div>
-                                <div className=' sm:py-4'>
-                                    <input type="radio" id='Cumplida' name="FiltroRadio" onChange={() => { filtroRadioOp(3) }} className=" peer hidden" />
-                                    <label htmlFor='Cumplida' className=" cursor-pointer rounded-md text-sm border-2 border-indigo-500 py-2 px-5    font-bold text-indigo-500 transition-colors duration-200 ease-in-out peer-checked:bg-indigo-500 peer-checked:text-white peer-checked:border-indigo-500">Cumplida</label>
-                                </div>
-                                <div className=' sm:py-4'>
-                                    <input type="radio" id='Cancelada' name="FiltroRadio" onChange={() => { filtroRadioOp(4) }} className=" peer hidden" />
-                                    <label htmlFor='Cancelada' className=" cursor-pointer rounded-md text-sm border-2 border-red-500 py-2 px-5    font-bold text-red-500 transition-colors duration-200 ease-in-out peer-checked:bg-red-500 peer-checked:text-white peer-checked:border-red-500">Cancelada</label>
-                                </div>
-                                <div className=' sm:py-4'>
-                                    <input type="radio" id='Pendiente' name="FiltroRadio" onChange={() => { filtroRadioOp(6) }} className=" peer hidden" />
-                                    <label htmlFor='Pendiente' className=" cursor-pointer rounded-md text-sm border-2 border-amber-500 py-2 px-5    font-bold text-amber-500 transition-colors duration-200 ease-in-out peer-checked:bg-amber-500 peer-checked:text-white peer-checked:border-amber-500">Pendiente</label>
-                                </div>
-                            </div>) : (null)
-                        }
+                        
 
                         <div className="mt-5 w-full border-t border-gray-400">
                             <div className="overflow-x-auto">
