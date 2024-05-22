@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from 'react'
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
+import Select from 'react-select';
 
 function page({ params }) {
 
@@ -12,11 +13,13 @@ function page({ params }) {
     const [auxCitasSemanas, setAuxCitasSemanas] = useState([])
     const [auxCitas2, setAuxCitas2] = useState([])
     const [semana, setSemana] = useState([])
+    const [semanaSelect, setSemanaSelect] = useState([])
     const [horas, setHoras] = useState([])
     const [citas, setCitas] = useState([])
     const [filtroRadio, setFiltroRario] = useState(false)
     const [currentPage, setCurrentPage] = useState(0);
-    const [semanaSeleccionada, setSemanaSeleccionada] = useState([]) 
+    const [semanaSeleccionada, setSemanaSeleccionada] = useState([])
+    const [semanaSeleccionadaAux, setSemanaSeleccionadaAux] = useState([])
 
     const capitalizeFirstLetter = (str) => {
         return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
@@ -99,7 +102,7 @@ function page({ params }) {
         setAuxCitas(auxiliar)
         setAuxCitasSemanas(auxiliar)
     }
-    const goToPage = (page) => { 
+    const goToPage = (page) => {
         if (page >= Math.ceil(auxCitasSemanas.length / 10))
             return
 
@@ -179,8 +182,15 @@ function page({ params }) {
                 if (fechaInicio < fecha && fechaFin > fecha) {
                     fechaSelec = element
                     setSemanaSeleccionada(element)
+                    setSemanaSeleccionadaAux(element)
                 }
             }
+            const dataAux = []
+            dataAux.push({ value: -1, label: "Todos " })
+            data3.forEach(element => {
+                dataAux.push({ value: element.numeroSemana, label: "Semana " + element.numeroSemana })
+            }); 
+            setSemanaSelect(dataAux)
             setSemana(data3)
 
             const response2 = await fetch('https://td-g-production.up.railway.app/citas-asesoria-ppi/asesor/' + params.id);
@@ -195,6 +205,10 @@ function page({ params }) {
                         auxiliar.push(element)
                     }
                 }
+                for (let index = 0; index < data2.length; index++) {
+                    const element = data2[index];
+                    data2[index]["dia"] = format(element.fecha, 'EEEE dd', { locale: es })
+                }
                 setCitas(data2)
                 setAuxCitas(auxiliar)
                 setAuxCitasSemanas(data2)
@@ -204,7 +218,7 @@ function page({ params }) {
             const response2 = await fetch('https://td-g-production.up.railway.app/equipo-usuarios/Estudiantes');
             const data2 = await response2.json();
             if (response2.ok) {
-                setEstudiantes(data2); 
+                setEstudiantes(data2);
             }
         };
         fetchData();
@@ -226,7 +240,7 @@ function page({ params }) {
                         <h1 className="text-3xl font-bold text-gray-600 pl-5">Citas Semanales:</h1>
                         <span className="text-3xl text-gray-500 font-semibold pr-3 pl-1">
                             {horas.horasAsignadas * 3}
-                        </span> 
+                        </span>
                     </div>
                 </div>
                 <div className='p-10'>
@@ -242,14 +256,24 @@ function page({ params }) {
                             ) : (
                                 null
                             )}
-                        </div>    <div className='flex flex-wrap gap-3 mt-5'>
+                        </div>
+                        <div className='flex flex-wrap gap-3 mt-5'>
 
-                            <div className=' sm:pt-2'>
-                                <input type="radio" onChange={() => { filtroSemana(0) }} id='Todos' name="filtroSemana" className=" peer hidden" />
-                                <label htmlFor='Todos' className=" cursor-pointer rounded-lg border-2 text-sm border-violet-500 py-2 px-5 font-bold text-violet-500 transition-colors duration-200 ease-in-out peer-checked:bg-violet-500 peer-checked:text-white peer-checked:border-violet-500">Todos</label>
-                            </div>
 
-                            {
+                            <Select
+                                className="basic-single w-52"
+                                classNamePrefix="select"
+                                isDisabled={false}
+                                isLoading={false}
+                                isClearable={true}
+                                isRtl={false}
+                                isSearchable={true}
+                                name="Semana"
+                                options={semanaSelect}
+                                onChange={(option) => { if (option != null) filtroSemana(option.value); else filtroSemana(semanaSeleccionadaAux.numeroSemana)}}
+                            />
+
+                            {/*
                                 semana.map((item) => (
                                     <div key={item.id} className='sm:pt-2'>
                                         {semanaSeleccionada && item.numeroSemana === semanaSeleccionada.numeroSemana ? (
@@ -260,7 +284,7 @@ function page({ params }) {
                                         <label htmlFor={`semana${item.numeroSemana}`} className=" cursor-pointer rounded-lg text-sm border-2 border-violet-500 py-2 px-5 font-bold text-violet-500 transition-colors duration-200 ease-in-out peer-checked:bg-violet-500 peer-checked:text-white peer-checked:border-violet-500">Semana {item.numeroSemana}</label>
                                     </div>
                                 ))
-                            }
+                            */}
 
                         </div>
                         <div className=" mt-5 flex items-center w-full">
@@ -332,11 +356,11 @@ function page({ params }) {
                                     </thead>
                                     <tbody className="divide-y divide-gray-200">
                                         {auxCitas.map((item, index) => {
-                                            let equipo=[];
+                                            let equipo = [];
                                             //const equipo = estudiantes[item.equipocita]
-                                            if(item.equipocita){
+                                            if (item.equipocita) {
                                                 equipo = estudiantes[item.equipocita.codigoEquipo]
-                                            } 
+                                            }
                                             if (index >= currentPage * 10 && index < (currentPage + 1) * 10) {
                                                 let numeroSeman = 0;
                                                 for (let index = 0; index < semana.length; index++) {
@@ -351,8 +375,8 @@ function page({ params }) {
                                                 return (
                                                     <tr key={item.id}>
                                                         <td className="whitespace-nowrap px-4 py-2 font-semibold text-center text-gray-500">{numeroSeman}</td>
-                                                        <td className="whitespace-nowrap px-4 py-2 font-semibold text-center text-gray-500"> {capitalizeFirstLetter(format(item.fecha, 'EEEE dd', { locale: es }))}</td>
-                                                        <td className="whitespace-normal text-center font-semibold px-4 py-2 text-gray-500">{item.hora.split(':')[0]}:{item.hora.split(':')[1]} </td> 
+                                                        <td className="whitespace-nowrap px-4 py-2 font-semibold text-center text-gray-500"> {capitalizeFirstLetter(item.dia)}</td>
+                                                        <td className="whitespace-normal text-center font-semibold px-4 py-2 text-gray-500">{item.hora.split(':')[0]}:{item.hora.split(':')[1]} </td>
                                                         <td className="whitespace-nowrap px-4 py-2 font-semibold text-gray-400 text-center">
                                                             {equipo.length != 0 ?
                                                                 (equipo.map((item) => (

@@ -26,7 +26,7 @@ function crear() {
     const [diaLunes, setDiaLunes] = useState('');
     const [showCitasPendientes, setShowCitasPendientes] = useState(false)
     const [diasNumero, setDiaNumero] = useState([]);
-    const [fechaPruebas, setFechaPruebas] = useState(new Date("05/24/2024"));
+    const [fechaPruebas, setFechaPruebas] = useState(new Date());
     const [citasPendientes, setCitasPendientes] = useState([])
     const [horasPendientes, setHorasPendientes] = useState('');
     const [diasConst, setDiasConst] = useState(['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'])

@@ -270,19 +270,23 @@ function page({ params }) {
     }
     const cancelarCita = async (id) => {
         if (diaCancelar != 0 && horaCancelar != 0 && minCancelar != -1 && observacion != -1) {
-            const fechaActual = new Date(fechaPruebas) 
-            if (fechaActual.getDate() == fecha.split("/")[0]) { 
+            const fechaActual = new Date(fechaPruebas)
+            if (fechaActual.getDate() == fecha.split("/")[0]) {
                 const horaCita = (parseInt(hora.split(":")[0]) * 60) + parseInt(hora.split(":")[1])
                 const horaActual = (parseInt(fechaActual.getHours() + 2) * 60) + parseInt(fechaActual.getMinutes())
                 if (horaCita - horaActual < 0) {
                     setShowNoCancelar(true)
                     return
                 }
-            } 
+            }
+
+            const usuarioNest = localStorage.getItem('U2FsdGVkX1');
+            const bytes = CryptoJS.AES.decrypt(usuarioNest, 'PPIITYTPIJC');
+            const usuarioN = JSON.parse(bytes.toString(CryptoJS.enc.Utf8))
             const FechaCancelar = new Date(fechaPruebas);
             FechaCancelar.setDate(diaCancelar);
             const Fecha = format(FechaCancelar, 'yyyy-MM-dd');
-            const response2 = await fetch(`https://td-g-production.up.railway.app/citas-asesoria-ppi/BuscarFechaHoraUsuario/${Fecha}/${horaCancelar}:${minCancelar}/1`);
+            const response2 = await fetch(`https://td-g-production.up.railway.app/citas-asesoria-ppi/BuscarFechaHoraUsuario/${Fecha}/${horaCancelar}:${minCancelar}/${usuarioN.id}`);
             const data2 = await response2.json();
             if (data2.length != 0) {
                 setShowOcupado(true)
@@ -308,10 +312,6 @@ function page({ params }) {
                 const element = estudiantes[index];
                 estudiant.push(element.correo)
             }
-            const usuarioNest = localStorage.getItem('U2FsdGVkX1');
-            const bytes = CryptoJS.AES.decrypt(usuarioNest, 'PPIITYTPIJC');
-            const usuarioN = JSON.parse(bytes.toString(CryptoJS.enc.Utf8))
-            estudiant.push(usuarioN.correo)
             const dataCrearMeet = {
                 "date": format(FechaCancelar, 'yyyy-MM-dd'),
                 "dateTime": `${horaCancelar}:${minCancelar}:00`,
@@ -469,10 +469,13 @@ function page({ params }) {
                                 };
                                 const response = await fetch('https://td-g-production.up.railway.app/notificaciones', requestOptions);
                                 if (response.ok) {
+
+                                    const filtroMotivo = motivo.find((item) => item.id === parseInt(observacion));
                                     const dataCrearMeet = {
                                         "eventId": cita.idCalendar,
-                                        "cause": observacion
+                                        "cause": filtroMotivo.nombre
                                     };
+                                    console.log(dataCrearMeet)
                                     const requestOptionsMEET = {
                                         method: 'POST',
                                         headers: { 'Content-Type': 'application/json' },

@@ -15,6 +15,7 @@ function miBitacora() {
     const [seguimiento, setSeguimiento] = useState([])
     const [usuario, setUsuario] = useState([])
     const [showNoEqupo, setShowNoEqupo] = useState(false);
+    const [modSol, setModSol] = useState([])
 
     useEffect(() => {
         const traerBitacora = async () => {
@@ -27,10 +28,13 @@ function miBitacora() {
                 if (response.ok) {
                     const data = await response.json()
                     setBitacora(data)
+                    const response2 = await fetch('https://td-g-production.up.railway.app/equipo-ppi-pjic/' + data.codigoEquipo);
+                    const data2 = await response2.json();
+                    setModSol(data2.usuariopjic);
 
                 }
             } catch (e) {
-setShowNoEqupo(true)
+                setShowNoEqupo(true)
             }
         }
         traerBitacora();
@@ -102,14 +106,25 @@ setShowNoEqupo(true)
             <details class="w-full bg-white   border-t-2 border-b-2 mt-5 font-semibold text-xl text-gray-600 border-gray-600  mb-3">
                 <summary class="w-full bg-white text-dark flex justify-between px-4 py-3  cursor-pointer">Encabezado</summary><div className="p-10">
                     <div className="pb-5">
-                        <span className="text-2xl font-bold text-gray-600">Estudiantes:</span>
-                        <div className="ml-5 sm:ml-10 mt-2 text-xl text-gray-400">
-                            {
-                                estudiantesAux && estudiantesAux.map((item) => (
-                                    <>{item.nombre}<br /></>
-                                ))
-                            }
+                        <div className='grid grid-cols-1 sm:grid-cols-2'>
+                            <div>
+                                <span className="text-2xl font-bold text-gray-600">Estudiantes:</span>
+                                <div className="ml-5 sm:ml-10 mt-2 text-xl text-gray-400">
+                                    {
+                                        estudiantesAux && estudiantesAux.map((item) => (
+                                            <>{item.nombre}<br /></>
+                                        ))
+                                    }
+                                </div>
+                            </div>
+                            <div>
+                                <span className="text-2xl font-bold text-gray-600">Módulo sol:</span>
+                                <div className="ml-5 sm:ml-10 mt-2 text-xl text-gray-400">
+                                    {modSol.nombre}
+                                </div>
+                            </div>
                         </div>
+
                     </div>
                     <div className="pb-5">
                         <div className="grid grid-cols-1 sm:grid-cols-2">
@@ -158,12 +173,14 @@ setShowNoEqupo(true)
                                     <th className="whitespace-nowrap px-4 py-2 font-blod text-gray-600">Compromisos</th>
                                     <th className="whitespace-nowrap px-4 py-2 font-blod text-gray-600">Observaciones</th>
                                     <th className="whitespace-nowrap px-4 py-2 font-blod text-gray-600">Asistencias</th>
+                                    <th className="whitespace-nowrap px-4 py-2 font-blod text-gray-600">Asesor</th>
                                     <th className="whitespace-nowrap px-4 py-2 font-blod text-gray-600"></th>
                                 </tr>
                             </thead>
                             <tbody className="divide-y divide-gray-200">
                                 {seguimiento.map((item, index) => {
                                     const estados = item.estados
+                                    console.log(item)
                                     const asistenciaEstudiantes = estudiantes[item.id]
                                     estados.sort((a, b) => new Date(b.fecha) - new Date(a.fecha));
                                     return (
@@ -183,7 +200,9 @@ setShowNoEqupo(true)
                                                     })
                                                 ) : (null)
                                             }
-                                            </td><td className="whitespace-normal px-4 py-2 text-center flex text-gray-700">
+                                            </td> 
+                                            <td className="whitespace-normal px-4 py-2 font-semibold text-center text-gray-400">{item.citas.usuariocitaequipo.nombre} </td>
+                                            <td className="whitespace-normal px-4 py-2 text-center flex text-gray-700">
                                                 <a href={'/component/seguimientos/visualizar/' + item.id} className=' flex items-center justify-center'>
                                                     <div className='p-3 rounded-full bg-gray-600'>
                                                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white" class="w-6 h-6">
