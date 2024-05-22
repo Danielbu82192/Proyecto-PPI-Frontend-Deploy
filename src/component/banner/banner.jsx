@@ -35,7 +35,7 @@ const NewCard = ({ key, newTitle, newContent, newImage }) => {
     const handleOnClose = () => setShowContentModal(false);
     return (
         <>
-            <div key={key} className="flex flex-col md:w-[30%] w-[50%] aspect-[1/.85] p-2 rounded-lg border border-solid border-gray-300 bg-slate-50 cursor-pointer" onClick={() => setShowContentModal(true)}>
+            <div key={key} className="flex flex-col md:flex-nowrap flex-wrap md:w-[30%] w-[40%] aspect-[1/.85] p-2 rounded-lg border border-solid border-gray-300 bg-slate-50 cursor-pointer" onClick={() => setShowContentModal(true)}>
                 <div className="rounded-lg bg-cover bg-center w-full">
                     <img className="rounded-lg object-scale-down"
                         src={newImage} loading="eager" quality={100} alt="" />
