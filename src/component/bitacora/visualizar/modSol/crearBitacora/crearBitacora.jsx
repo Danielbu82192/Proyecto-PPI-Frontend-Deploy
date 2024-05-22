@@ -136,16 +136,17 @@ function crearBitacora({ equipo }) {
 
     return (
         <div>
-            <div className='flex'>
+            <div className='flex flex-col sm:flex-row'>
                 <h1 className='text-3xl font-bold text-center text-gray-600'>Nombre/Alias:</h1>
                 <input
                     type="email"
                     id="UserEmail"
                     value={nombre}
                     onChange={(e) => { setNombre(e.target.value) }}
-                    class="ml-2 w-full rounded-md border-gray-400 shadow-sm sm:text-sm"
+                    className="ml-2 w-full      rounded-md border-gray-400 shadow-sm sm:text-sm sm:ml-4"
                 />
             </div>
+
             <div className='mt-5'>
                 <h1 className='text-3xl font-bold text-center text-gray-600'>Descripción del proyecto:</h1>
                 <textarea
