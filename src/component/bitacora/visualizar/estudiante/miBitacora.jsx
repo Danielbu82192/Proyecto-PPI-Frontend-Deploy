@@ -117,7 +117,7 @@ function miBitacora() {
                                     }
                                 </div>
                             </div>
-                            <div>
+                            <div className="pt-5 sm:pb-0">
                                 <span className="text-2xl font-bold text-gray-600">Módulo sol:</span>
                                 <div className="ml-5 sm:ml-10 mt-2 text-xl text-gray-400">
                                     {modSol.nombre}
@@ -134,7 +134,7 @@ function miBitacora() {
                                     {bitacora.descripcion}
                                 </div>
                             </div>
-                            <div>
+                            <div className="pt-5 sm:pb-0">
                                 <span className="text-2xl font-bold text-gray-600">Alcance:</span>
                                 <div className="ml-5 sm:ml-10 mt-2 text-xl text-gray-400">
                                     {bitacora.alcance}
@@ -151,7 +151,7 @@ function miBitacora() {
                                     {bitacora.socializacionuno}
                                 </div>
                             </div>
-                            <div>
+                            <div className="pt-5 sm:pb-0">
                                 <span className="text-2xl font-bold text-gray-600">Alcance Socialización 2:</span>
                                 <div className="ml-5 sm:ml-10 mt-2 text-xl text-gray-400">
                                     {bitacora.socializaciondos}
@@ -200,7 +200,7 @@ function miBitacora() {
                                                     })
                                                 ) : (null)
                                             }
-                                            </td> 
+                                            </td>
                                             <td className="whitespace-normal px-4 py-2 font-semibold text-center text-gray-400">{item.citas.usuariocitaequipo.nombre} </td>
                                             <td className="whitespace-normal px-4 py-2 text-center flex text-gray-700">
                                                 <a href={'/component/seguimientos/visualizar/' + item.id} className=' flex items-center justify-center'>
