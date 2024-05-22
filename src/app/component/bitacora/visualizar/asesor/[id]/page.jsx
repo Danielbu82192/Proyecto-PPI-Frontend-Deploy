@@ -80,7 +80,7 @@ function page({ params }) {
 
 
     useEffect(() => {
-        const fechData = async () => { 
+        const fechData = async () => {
             const response = await fetch('https://td-g-production.up.railway.app/equipo-ppi/' + params.id);
             const data = await response.json();
             if (response.ok) {
@@ -185,41 +185,43 @@ function page({ params }) {
         <div className="ml-6 mr-6 mt-6 border bg-white border-b flex justify-between">
             <div className="pt-8 pb-8 w-full">
 
-
-                <div className="md:h-auto lg:h-auto xl:h-auto sm:h-auto border-b-2 pl-8 pb-5 pr-5 sm:pr-52 flex flex-col sm:flex-row justify-between items-center">
+                <div className='w-full border-b-2 flex flex-col sm:flex-row items-center sm:items-start justify-center sm:justify-between sm:pl-8 sm:h-22 pb-5 text-center sm:text-left'>
                     <div className="mb-5 sm:mb-0">
                         <h1 className="text-4xl font-bold text-gray-600">{bitacora.nombre}</h1>
                     </div>
-                    <div>
-                        <span className="text-3xl text-gray-600 font-bold">Equipo:</span>
-                        <span className="text-3xl text-gray-500 font-semibold ml-2">{bitacora.codigoEquipo}</span>
+                    <div className="mt-2 sm:mt-0 sm:mr-8">
+                        <div className="sm:ml-auto">
+                            <span className="text-3xl text-gray-600 font-bold">Equipo:</span>
+                            <span className="text-3xl text-gray-500 font-semibold ml-2">{bitacora.codigoEquipo}</span>
+                        </div>
                     </div>
                 </div>
+
+
 
                 <details class="w-full bg-white   border-t-2 border-b-2 mt-5 font-semibold text-xl text-gray-600 border-gray-600  mb-3">
                     <summary class="w-full bg-white text-dark flex justify-between px-4 py-3  cursor-pointer">Encabezado</summary><div className="p-10">
                         <div className="pb-5">
-                            <div className='grid grid-cols-2'>
-                                <div>
+                            <div className='grid grid-cols-1 sm:grid-cols-2'>
+                                <div className="mt-4 sm:mt-0">
                                     <span className="text-2xl font-bold text-gray-600">Estudiantes:</span>
                                     <div className="ml-5 sm:ml-10 mt-2 text-xl text-gray-400">
-                                        {
-                                            estudiantesAux && estudiantesAux.map((item) => (
-                                                <>{item.nombre}
-                                                    <br /></>
-                                            ))
-                                        }
+                                        {estudiantesAux && estudiantesAux.map((item) => (
+                                            <div key={item.id}>
+                                                {item.nombre}
+                                                <br />
+                                            </div>
+                                        ))}
                                     </div>
                                 </div>
-                                <div> <span className="text-2xl font-bold text-gray-600">Modulo Sol:</span>
+                                <div className="mt-4 sm:mt-0">
+                                    <span className="text-2xl font-bold text-gray-600">Módulo Sol:</span>
                                     <div className="ml-5 sm:ml-10 mt-2 text-xl text-gray-400">
                                         {modSol.nombre}
                                     </div>
                                 </div>
                             </div>
-
-
-                        </div>
+                        </div> 
                         <div className="pb-5">
                             <div className="grid grid-cols-1 sm:grid-cols-2">
                                 <div>
@@ -228,7 +230,7 @@ function page({ params }) {
                                         {bitacora.descripcion}
                                     </div>
                                 </div>
-                                <div>
+                                <div className="mt-4 sm:mt-0"> 
                                     <span className="text-2xl font-bold text-gray-600">Alcance:</span>
                                     <div className="ml-5 sm:ml-10 mt-2 text-xl text-gray-400">
                                         {bitacora.alcance}
@@ -245,7 +247,7 @@ function page({ params }) {
                                         {bitacora.socializacionuno}
                                     </div>
                                 </div>
-                                <div>
+                                <div className="mt-4 sm:mt-0">
                                     <span className="text-2xl font-bold text-gray-600">Alcance Socialización 2:</span>
                                     <div className="ml-5 sm:ml-10 mt-2 text-xl text-gray-400">
                                         {bitacora.socializaciondos}
@@ -277,7 +279,7 @@ function page({ params }) {
                                         const citas = item.citas
                                         const asesor = citas.usuariocitaequipo
                                         const asistenciaEstudiantes = estudiantes[item.id]
-                                        let numSemana = item.semana 
+                                        let numSemana = item.semana
                                         estados.sort((a, b) => new Date(b.fecha) - new Date(a.fecha));
                                         return (
                                             <tr key={item.id}>
