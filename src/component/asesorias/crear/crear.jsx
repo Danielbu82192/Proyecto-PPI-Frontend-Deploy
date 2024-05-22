@@ -525,24 +525,10 @@ function crear() {
                     <div className='pt-8'>
                         <h1 className='text-3xl font-bold text-center text-gray-600'>Selecciona la hora de la cita:</h1>
 
-                        <div className='mt-5'>
-                            {/*
-                            <div class="justify-center flex pt-8">
-                            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-10 gap-4">
-                                {horas.map((items, index1) => (
-                                    <div key={index1} className="pt-8 pl-5">
-                                        {items.map((item, index) => (
-                                            <div key={item} className='px-2 py-4'>
-                                                <input onClick={(e) => seleccionarHora(item)} type="checkbox" id={item} name="dia-semana" className=" peer hidden" />
-                                                <label htmlFor={item} id={`lb${item}`} className="labelCheck select-none cursor-pointer rounded-lg border-2 border-emerald-500 py-3 px-6 font-bold text-emerald-500 transition-colors duration-200 ease-in-out peer-checked:bg-emerald-500 peer-checked:text-white peer-checked:border-blue-200">{item}</label>
-                                            </div>
-                                        ))}
-                                    </div>
-                                ))}
-                            </div>*/}
-                            <div className=' grid grid-cols-3'>
+                        <div className='mt-5'> 
+                            <div className='  grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3'>
                                 {horasMañana.length != 0 ? (
-                                    <div className=''>
+                                    <div className='mb-8'>
                                         <div className='flex items-center justify-center text-center'>
                                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" className="w-6 h-6 text-gray-500">
                                                 <path stroke-linecap="round" stroke-linejoin="round" d="M12 3v2.25m6.364.386-1.591 1.591M21 12h-2.25m-.386 6.364-1.591-1.591M12 18.75V21m-4.773-4.227-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0Z" />
@@ -555,7 +541,7 @@ function crear() {
                                                     {items.map((item, index) => (
                                                         <div key={item} className='py-4'>
                                                             <input onClick={(e) => seleccionarHora(item)} type="checkbox" id={item} name="dia-semana" className=" peer hidden" />
-                                                            <label htmlFor={item} id={`lb${item}`} className="labelCheck select-none cursor-pointer rounded-lg border-2 border-amber-500 py-3 px-6 font-bold text-amber-500 transition-colors duration-200 ease-in-out peer-checked:bg-amber-500 peer-checked:text-white peer-checked:border-amber-200">{item}</label>
+                                                            <label htmlFor={item} id={`lb${item}`} className={`${item.split(":")[0]<=9?('sm:px-7 px-5'):('sm:px-6 px-4')} labelCheck select-none cursor-pointer rounded-lg border-2 border-orange-500 sm:py-3 py-2 font-bold text-orange-500 transition-colors duration-200 ease-in-out peer-checked:bg-orange-500 peer-checked:text-white peer-checked:border-orange-200`}>{item}</label>
                                                         </div>
                                                     ))}
                                                 </div>
@@ -564,7 +550,7 @@ function crear() {
                                     </div>
                                 ) : (null)}
                                 {horasTarde.length != 0 ? (
-                                    <div className='border-x-2 border-gray-400'>
+                                    <div className='mb-8 sm:border-x-2  border-gray-400'>
                                         <div className='flex items-center justify-center text-center'>
                                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6 text-gray-500"><path d="M8 12H10V14H4V12H6C6 8.68629 8.68629 6 12 6C15.3137 6 18 8.68629 18 12C18 15.3137 15.3137 18 12 18V16C14.2091 16 16 14.2091 16 12C16 9.79086 14.2091 8 12 8C9.79086 8 8 9.79086 8 12ZM6 20H15V22H6V20ZM2 16H10V18H2V16ZM11 1H13V4H11V1ZM3.51472 4.92893L4.92893 3.51472L7.05025 5.63604L5.63604 7.05025L3.51472 4.92893ZM16.9497 18.364L18.364 16.9497L20.4853 19.0711L19.0711 20.4853L16.9497 18.364ZM19.0711 3.51472L20.4853 4.92893L18.364 7.05025L16.9497 5.63604L19.0711 3.51472ZM23 11V13H20V11H23Z"></path></svg>
                                             <span className='text-xl font-semibold text-gray-500'>Tarde</span>
@@ -575,7 +561,7 @@ function crear() {
                                                     {items.map((item, index) => (
                                                         <div key={item} className='py-4'>
                                                             <input onClick={(e) => seleccionarHora(item)} type="checkbox" id={item} name="dia-semana" className=" peer hidden" />
-                                                            <label htmlFor={item} id={`lb${item}`} className="labelCheck select-none cursor-pointer rounded-lg border-2 border-orange-500 py-3 px-6 font-bold text-orange-500 transition-colors duration-200 ease-in-out peer-checked:bg-orange-500 peer-checked:text-white peer-checked:border-orange-200">{item}</label>
+                                                            <label htmlFor={item} id={`lb${item}`} className={`sm:px-6 px-4 labelCheck select-none cursor-pointer rounded-lg border-2 border-orange-500 sm:py-3 py-2 font-bold text-orange-500 transition-colors duration-200 ease-in-out peer-checked:bg-orange-500 peer-checked:text-white peer-checked:border-orange-200`}>{item}</label>
                                                         </div>
                                                     ))}
                                                 </div>
@@ -598,9 +584,9 @@ function crear() {
                                             {horasNoche.map((items, index1) => (
                                                 <div key={index1} className="pt-2 pl-5 grid grid-cols-3">
                                                     {items.map((item, index) => (
-                                                        <div key={item} className=' py-4'>
+                                                        <div key={item} className='py-4'>
                                                             <input onClick={(e) => seleccionarHora(item)} type="checkbox" id={item} name="dia-semana" className=" peer hidden" />
-                                                            <label htmlFor={item} id={`lb${item}`} className="labelCheck select-none cursor-pointer rounded-lg border-2 border-primari py-3 px-6 font-bold text-primari transition-colors duration-200 ease-in-out peer-checked:bg-primari peer-checked:text-white peer-checked:border-green-200">{item}</label>
+                                                            <label htmlFor={item} id={`lb${item}`} className="labelCheck select-none cursor-pointer rounded-lg border-2 border-primari sm:py-3 py-2 sm:px-6 px-4 font-bold text-primari transition-colors duration-200 ease-in-out peer-checked:bg-primari peer-checked:text-white peer-checked:border-green-200">{item}</label>
                                                         </div>
                                                     ))}
                                                 </div>
