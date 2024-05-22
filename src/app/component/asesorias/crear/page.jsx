@@ -6,7 +6,7 @@ import Crear from '@/component/asesorias/crear/crear';
 import CryptoJS from 'crypto-js';
 import { format } from 'date-fns';
 
-function page()  {
+function page() {
     const [fechaPruebas, setFechaPruebas] = useState(new Date());
     const dia = fechaPruebas.getDate()
     const monthIndex = fechaPruebas.getMonth();
@@ -16,52 +16,57 @@ function page()  {
     const [citasPendiente, setCitasPendientes] = useState([]);
     const [citasActuales, setCitasActuales] = useState([]);
     const [semanaSeleccionada, setSemanaSeleccionada] = useState([])
-    
-    
+
+
     const validarHoras = async () => {
-        const usuarioNest = localStorage.getItem('U2FsdGVkX1');
-        const bytes = CryptoJS.AES.decrypt(usuarioNest, 'PPIITYTPIJC');
-        const usuarioN = JSON.parse(bytes.toString(CryptoJS.enc.Utf8))
-        const fecha = fechaPruebas;
-        let diaSemanas = fecha.getDay();
-        const numeroDia = fecha.getDate();
-        if (fecha.getHours() >= 18) diaSemanas = diaSemanas + 1;
-        const diaLunes = numeroDia - fecha.getDay() + 1;
-        const response = await fetch('https://td-g-production.up.railway.app/hora-semanal/profesor/' + usuarioN.id);
-        const data = await response.json();
-        if (response.ok) {
-            const horasAsignadas = data[0].horasAsignadas;
-            const CantidadAsesorias = horasAsignadas * 3;
-            const fechaActual = fechaPruebas;
-            const fechaLunes = new Date(fechaActual);
-            fechaLunes.setDate(diaLunes);
-            const fechaSabado = new Date(fechaActual);
-            fechaSabado.setDate(fechaActual.getDate() - (fechaActual.getDay() - 7));
-            const fechaInicio = format(fechaLunes, "yyyy-MM-dd")
-            const fechaFin = format(fechaSabado, "yyyy-MM-dd") 
-            const response2 = await fetch(`https://td-g-production.up.railway.app/citas-asesoria-ppi/${fechaInicio}/${fechaFin}/` + usuarioN.id);
-            const data2 = await response2.json();
-            if (response2.ok) {
-                const registrosFiltrados = data2.filter(registro => registro.estadoCita.id === 2 || registro.estadoCita.id === 3 || registro.estadoCita.id === 1);
-                const asesoriasActual = registrosFiltrados.length;
-                if (asesoriasActual < CantidadAsesorias) {
-                    let citasActual = 0;
-                    setCitasActuales([])
-                    setCitasPendientes([])
-                    data2.forEach(item => {
-                        if (item.estadoCita.id !== 6 && item.estadoCita.id !== 5) {
-                            setCitasActuales(prev => [...prev, item]);
-                            citasActual = citasActual + 1
-                        } else {
-                            if (item.estadoCita.id == 6)
-                                setCitasPendientes(prev => [...prev, item]);
-                        }
-                    });
-                    return CantidadAsesorias - citasActual;
+        try {
+            const usuarioNest = localStorage.getItem('U2FsdGVkX1');
+            const bytes = CryptoJS.AES.decrypt(usuarioNest, 'PPIITYTPIJC');
+            const usuarioN = JSON.parse(bytes.toString(CryptoJS.enc.Utf8))
+            const fecha = fechaPruebas;
+            let diaSemanas = fecha.getDay();
+            const numeroDia = fecha.getDate();
+            if (fecha.getHours() >= 18) diaSemanas = diaSemanas + 1;
+            const diaLunes = numeroDia - fecha.getDay() + 1;
+            const response = await fetch('https://td-g-production.up.railway.app/hora-semanal/profesor/' + usuarioN.id);
+            const data = await response.json();
+            if (response.ok) {
+                const horasAsignadas = data[0].horasAsignadas;
+                const CantidadAsesorias = horasAsignadas * 3;
+                const fechaActual = fechaPruebas;
+                const fechaLunes = new Date(fechaActual);
+                fechaLunes.setDate(diaLunes);
+                const fechaSabado = new Date(fechaActual);
+                fechaSabado.setDate(fechaActual.getDate() - (fechaActual.getDay() - 7));
+                const fechaInicio = format(fechaLunes, "yyyy-MM-dd")
+                const fechaFin = format(fechaSabado, "yyyy-MM-dd")
+                const response2 = await fetch(`https://td-g-production.up.railway.app/citas-asesoria-ppi/${fechaInicio}/${fechaFin}/` + usuarioN.id);
+                const data2 = await response2.json();
+                if (response2.ok) {
+                    const registrosFiltrados = data2.filter(registro => registro.estadoCita.id === 2 || registro.estadoCita.id === 3 || registro.estadoCita.id === 1);
+                    const asesoriasActual = registrosFiltrados.length;
+                    if (asesoriasActual < CantidadAsesorias) {
+                        let citasActual = 0;
+                        setCitasActuales([])
+                        setCitasPendientes([])
+                        data2.forEach(item => {
+                            if (item.estadoCita.id !== 6 && item.estadoCita.id !== 5) {
+                                setCitasActuales(prev => [...prev, item]);
+                                citasActual = citasActual + 1
+                            } else {
+                                if (item.estadoCita.id == 6)
+                                    setCitasPendientes(prev => [...prev, item]);
+                            }
+                        });
+                        return CantidadAsesorias - citasActual;
+                    }
                 }
             }
+            return false;
+
+        } catch (error) {
+            return false;
         }
-        return false;
     };
     useEffect(() => {
         const obtenerHorasPendientes = async () => {
@@ -72,28 +77,32 @@ function page()  {
                 console.error("Error al obtener las horas pendientes:", error);
             }
         };
-
         const cargarsemana = async () => {
-            const response = await fetch(`https://td-g-production.up.railway.app/semanas`);
-            const data = await response.json();
-            if (response.ok) {
-                let fechaSelec = []
-                for (let index = 0; index < data.length; index++) {
-                    const element = data[index];
-                    const fecha = fechaPruebas
-                    const fechaInicio = new Date(element.fechaInicio)
-                    const fechaFin = new Date(element.fechaFin)
-                    if (fechaInicio <= fecha && fechaFin >= fecha) {
-                        fechaSelec = element
-                        setSemanaSeleccionada(element)
+            try {
+                const response = await fetch(`https://td-g-production.up.railway.app/semanas`);
+                const data = await response.json();
+                if (response.ok) {
+                    let fechaSelec = []
+                    for (let index = 0; index < data.length; index++) {
+                        const element = data[index];
+                        const fecha = fechaPruebas
+                        const fechaInicio = new Date(element.fechaInicio)
+                        const fechaFin = new Date(element.fechaFin)
+                        if (fechaInicio <= fecha && fechaFin >= fecha) {
+                            fechaSelec = element
+                            setSemanaSeleccionada(element)
+                        }
                     }
                 }
+ 
+            } catch (error) {
+                setSemanaSeleccionada()
             }
         }
 
         obtenerHorasPendientes();
         cargarsemana()
-    }, [fechaPruebas, validarHoras]);
+    }, [ ]);
     return (
         <div className="ml-6 mr-6 mt-6 border   bg-white border-b flex justify-between">
             <div className='pt-8  pb-8 w-full'>
