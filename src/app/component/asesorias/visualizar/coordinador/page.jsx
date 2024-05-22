@@ -4,12 +4,10 @@ import React from 'react'
 function page() {
     return (
         <div className="ml-6 mr-6 mt-6 border   bg-white border-b flex justify-between">
-            <div className='pt-8  pb-8 w-full'>
-                <div className='md:h-22 lg:h-22 xl:h-22 sm:h-22 border-b-2 pl-8 pb-5 pr-52 flex justify-between items-center'>
-                    <div>
-                        <h1 className='text-4xl font-bold text-gray-600'>Citas de asesorías</h1>
+            <div className='pt-8  pb-8 w-full'> 
+                <div className='w-full border-b-2 flex flex-col sm:flex-row items-center sm:items-start justify-between sm:pl-8 sm:h-22 sm:pr-5 pb-5 text-center sm:text-left'>
+                        <h1 className='text-4xl font-bold text-gray-600 mb-2 sm:mb-0'>Citas de asesorías</h1>
                     </div>
-                </div>
                 <div className='p-10'> 
                 <VisualizarCoordinador/>
                 </div>
