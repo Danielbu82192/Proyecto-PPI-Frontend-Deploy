@@ -214,8 +214,8 @@ function page({ params }) {
         <>
             <div className="ml-6 mr-6 mt-6 border   bg-white border-b flex justify-between">
                 <div className='pt-8  pb-8 w-full'>
-                    <div className=' md:h-22 lg:h-22 xl:h-16 sm:h-22  border-b-2 pl-8 pr-80 items-start w-full flex '>
-                        <h1 className='text-4xl font-bold text-center text-gray-600'>Cita de asesorías</h1>
+                  <div className='w-full border-b-2 flex items-center sm:items-start justify-center sm:justify-start sm:pl-8 sm:h-22 pb-5 text-center sm:text-left'>
+                        <h1 className='text-4xl font-bold text-gray-600'>Cita de asesorías</h1>
                     </div>
                     <div className='p-5'>
                         <div className='grid grid-cols-1 lg:grid-cols-3'>
