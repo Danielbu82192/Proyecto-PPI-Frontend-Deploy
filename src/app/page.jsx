@@ -46,16 +46,6 @@ function page() {
             const usuario = await response2.json();
             console.log(usuario)
             if (response2.ok && usuario.length != 0) {
-                /* const datos = {
-                     "datosGoogle": datosGoogle
-                 }
-                 const requestOptions = {
-                     method: 'PATCH',
-                     headers: { 'Content-Type': 'application/json' },
-                     body: JSON.stringify(datos)
-                 };
-                 const response = await fetch('https://td-g-production.up.railway.app/usuario/correo/' + datosGoogle.email, requestOptions);
-                 */
                 const googleCifrado = CryptoJS.AES.encrypt(JSON.stringify(datosGoogle), 'PPIITYTPIJC').toString();
                 const nestCifrado = CryptoJS.AES.encrypt(JSON.stringify(usuario), 'PPIITYTPIJC').toString();
                 localStorage.setItem('U2FsdGVkX1', nestCifrado);
@@ -66,7 +56,7 @@ function page() {
                 setShowAlert(true)
             }
         } catch (e) {
-            setShowAlert(true) 
+            setShowAlert(true)
         }
     }
 
@@ -94,10 +84,7 @@ function page() {
             }
         } else {
             const response2 = await fetch(`https://td-g-production.up.railway.app/google/logout`);
-
         }
-
-
     }
     return (<div className="relative flex flex-col items-center min-h-screen justify-center">
         <div className="flex flex-column items-center justify-self-center">
@@ -106,7 +93,7 @@ function page() {
                     layout="fill" objectFit="cover" quality={100} />
             </div >
             <div className="relative container mx-auto px-6 text-gray-500 md:px-12 xl:px-40">
-                <div className="mx-auto md:w-8/12 lg:w-8/12 xl:w-8/12">
+                <div className="mx-auto md:w-[60vw] lg:w-8/12 xl:w-8/12">
                     <div className="rounded-xl bg-white shadow-xl">
                         <div className="p-6 sm:p-16">
                             <div className="relative flex flex-col items-center justify-center">
@@ -157,10 +144,7 @@ function page() {
             )
         }
     </div >
-
-
     );
-
 }
 
 export default page
