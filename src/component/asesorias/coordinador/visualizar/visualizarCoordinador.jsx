@@ -164,7 +164,7 @@ function visualizarCoordinador() {
             const fechaInicio = new Date(rango.fechaInicio);
             const fechaFin = new Date(rango.fechaFin);
             fechaInicio.setHours(0, 0, 0, 0)
-            fechaFin.setHours(0, 0, 0, 0) 
+            fechaFin.setHours(0, 0, 0, 0)
             if (fechaCita >= fechaInicio && fechaCita <= fechaFin) {
                 return rango.numeroSemana;
             }
@@ -174,7 +174,7 @@ function visualizarCoordinador() {
     return (
         <div>
             <div className="flex items-center w-full">
-                <div onClick={() => { setFiltroRario(!filtroRadio); setAuxCitas(citas);setAuxCitas2(citas) }} className={`cursor-pointer  flex justify-center items-center border-2 rounded-md  p-1.5 ${filtroRadio ? ('bg-red-400 border-red-400') : ('border-gray-300')}`}>
+                <div onClick={() => { setFiltroRario(!filtroRadio); setAuxCitas(citas); setAuxCitas2(citas) }} className={`cursor-pointer  flex justify-center items-center border-2 rounded-md  p-1.5 ${filtroRadio ? ('bg-red-400 border-red-400') : ('border-gray-300')}`}>
                     {filtroRadio ? (<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="white" class="w-6 h-6">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
                     </svg>
@@ -197,33 +197,39 @@ function visualizarCoordinador() {
                 </div>
             </div>
             {
-                filtroRadio ? (<div className='flex flex-wrap gap-3 mt-2'>
-                    <div className=' sm:py-4'>
-                        <input defaultChecked type="radio" onChange={() => { filtroRadioOp(0) }} id='Todos' name="FiltroRadio" className=" peer hidden" />
-                        <label htmlFor='Todos' className=" cursor-pointer rounded-lg border-2 text-sm border-gray-500 py-2 px-5 font-bold text-slate-950 transition-colors duration-200 ease-in-out peer-checked:bg-slate-950 peer-checked:text-white peer-checked:border-slate-950">Todos</label>
-                    </div>
+                filtroRadio ? (
+                    <div className='flex flex-wrap gap-3 mt-2'>
+                        <div className='sm:py-4 sm:pt-0 pt-2 w-full sm:w-auto'>
+                            <input defaultChecked type="radio" onChange={() => { filtroRadioOp(0) }} id='Todos' name="FiltroRadio" className="peer hidden" />
+                            <label htmlFor='Todos' className="cursor-pointer rounded-lg border-2 text-sm border-gray-500 py-2 px-5 font-bold text-slate-950 transition-colors duration-200 ease-in-out peer-checked:bg-slate-950 peer-checked:text-white peer-checked:border-slate-950 w-full sm:w-auto">Todos</label>
+                        </div>
 
-                    <div className=' sm:py-4'>
-                        <input type="radio" id='Disponible' onChange={() => { filtroRadioOp(1) }} name="FiltroRadio" className=" peer hidden" />
-                        <label htmlFor='Disponible' className=" cursor-pointer rounded-lg text-sm border-2 border-gray-500 py-2 px-5 font-bold text-gray-500 transition-colors duration-200 ease-in-out peer-checked:bg-gray-500 peer-checked:text-white peer-checked:border-gray-500">Disponible</label>
+                        <div className='sm:py-4 sm:pt-0 pt-2 w-full sm:w-auto'>
+                            <input type="radio" id='Disponible' onChange={() => { filtroRadioOp(1) }} name="FiltroRadio" className="peer hidden" />
+                            <label htmlFor='Disponible' className="cursor-pointer rounded-lg text-sm border-2 border-gray-500 py-2 px-5 font-bold text-gray-500 transition-colors duration-200 ease-in-out peer-checked:bg-gray-500 peer-checked:text-white peer-checked:border-gray-500 w-full sm:w-auto">Disponible</label>
+                        </div>
+
+                        <div className='sm:py-4 sm:pt-0 pt-2 w-full sm:w-auto'>
+                            <input type="radio" id='Reservado' name="FiltroRadio" onChange={() => { filtroRadioOp(2) }} className="peer hidden" />
+                            <label htmlFor='Reservado' className="cursor-pointer rounded-md text-sm border-2 border-emerald-500 py-2 px-5 font-bold text-emerald-500 transition-colors duration-200 ease-in-out peer-checked:bg-emerald-500 peer-checked:text-white peer-checked:border-emerald-500 w-full sm:w-auto">Reservado</label>
+                        </div>
+
+                        <div className='sm:py-4 sm:pt-0 pt-2 w-full sm:w-auto'>
+                            <input type="radio" id='Cumplida' name="FiltroRadio" onChange={() => { filtroRadioOp(3) }} className="peer hidden" />
+                            <label htmlFor='Cumplida' className="cursor-pointer rounded-md text-sm border-2 border-indigo-500 py-2 px-5 font-bold text-indigo-500 transition-colors duration-200 ease-in-out peer-checked:bg-indigo-500 peer-checked:text-white peer-checked:border-indigo-500 w-full sm:w-auto">Cumplida</label>
+                        </div>
+
+                        <div className='sm:py-4 sm:pt-0 pt-2 w-full sm:w-auto'>
+                            <input type="radio" id='Cancelada' name="FiltroRadio" onChange={() => { filtroRadioOp(4) }} className="peer hidden" />
+                            <label htmlFor='Cancelada' className="cursor-pointer rounded-md text-sm border-2 border-red-500 py-2 px-5 font-bold text-red-500 transition-colors duration-200 ease-in-out peer-checked:bg-red-500 peer-checked:text-white peer-checked:border-red-500 w-full sm:w-auto">Cancelada</label>
+                        </div>
+
+                        <div className='sm:py-4 sm:pt-0 pt-2 w-full sm:w-auto'>
+                            <input type="radio" id='Pendiente' name="FiltroRadio" onChange={() => { filtroRadioOp(6) }} className="peer hidden" />
+                            <label htmlFor='Pendiente' className="cursor-pointer rounded-md text-sm border-2 border-amber-500 py-2 px-5 font-bold text-amber-500 transition-colors duration-200 ease-in-out peer-checked:bg-amber-500 peer-checked:text-white peer-checked:border-amber-500 w-full sm:w-auto">Pendiente</label>
+                        </div>
                     </div>
-                    <div className=' sm:py-4'>
-                        <input type="radio" id='Reservado' name="FiltroRadio" onChange={() => { filtroRadioOp(2) }} className=" peer hidden" />
-                        <label htmlFor='Reservado' className=" cursor-pointer rounded-md text-sm border-2 border-emerald-500 py-2 px-5    font-bold text-emerald-500 transition-colors duration-200 ease-in-out peer-checked:bg-emerald-500 peer-checked:text-white peer-checked:border-emerald-500">Reservado</label>
-                    </div>
-                    <div className=' sm:py-4'>
-                        <input type="radio" id='Cumplida' name="FiltroRadio" onChange={() => { filtroRadioOp(3) }} className=" peer hidden" />
-                        <label htmlFor='Cumplida' className=" cursor-pointer rounded-md text-sm border-2 border-indigo-500 py-2 px-5    font-bold text-indigo-500 transition-colors duration-200 ease-in-out peer-checked:bg-indigo-500 peer-checked:text-white peer-checked:border-indigo-500">Cumplida</label>
-                    </div>
-                    <div className=' sm:py-4'>
-                        <input type="radio" id='Cancelada' name="FiltroRadio" onChange={() => { filtroRadioOp(4) }} className=" peer hidden" />
-                        <label htmlFor='Cancelada' className=" cursor-pointer rounded-md text-sm border-2 border-red-500 py-2 px-5    font-bold text-red-500 transition-colors duration-200 ease-in-out peer-checked:bg-red-500 peer-checked:text-white peer-checked:border-red-500">Cancelada</label>
-                    </div>
-                    <div className=' sm:py-4'>
-                        <input type="radio" id='Pendiente' name="FiltroRadio" onChange={() => { filtroRadioOp(6) }} className=" peer hidden" />
-                        <label htmlFor='Pendiente' className=" cursor-pointer rounded-md text-sm border-2 border-amber-500 py-2 px-5    font-bold text-amber-500 transition-colors duration-200 ease-in-out peer-checked:bg-amber-500 peer-checked:text-white peer-checked:border-amber-500">Pendiente</label>
-                    </div>
-                </div>) : (null)
+                ) : (null)
             }
 
             <div className="mt-5 w-full border-t border-gray-400">
