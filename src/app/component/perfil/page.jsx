@@ -90,16 +90,18 @@ function page() {
                         </div>
                     </div>
 
-                    {rol.id == 3 ? (<div className="space-x-8 flex justify-between mt-32 md:mt-0 md:justify-center">
-                        {showMod ? null : (
-                            <button
-                                onClick={() => { setShowMod(!showMod) }}
-                                className="text-white py-2 px-4 rounded bg-orange-400 hover:bg-orange-500 shadow hover:shadow-lg font-medium transition transform hover:-translate-y-0.5"
-                            >
-                                Modificar
-                            </button>)
-                        }
-                    </div>) : (null)}
+                    {rol.id == 3 ? (
+                        <div className="flex flex-col space-y-4 md:space-y-0 md:space-x-8 justify-center items-center mt-32 md:mt-0">
+                            {showMod ? null : (
+                                <button
+                                    onClick={() => { setShowMod(!showMod) }}
+                                    className="text-white py-2 px-4 rounded bg-orange-400 hover:bg-orange-500 shadow hover:shadow-lg font-medium transition transform hover:-translate-y-0.5"
+                                >
+                                    Modificar
+                                </button>
+                            )}
+                        </div>
+                    ) : null}
 
                 </div>
                 <div className="mt-20 text-center border-b pb-12 px-4 sm:px-6 md:px-8">
@@ -113,11 +115,10 @@ function page() {
                 </div>
 
                 {showMod ? (
-                    <div className=" text-center mt-5 ">
-                        <div className='grid grid-cols-4 '>
+                    <div className="text-center mt-5">
+                        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
                             <div className=''>
-                                <label for="hora" class="block text-xs font-medium text-gray-700"> Oficina </label>
-
+                                <label htmlFor="hora" className="block text-xs font-medium text-gray-700">Oficina</label>
                                 <input
                                     value={oficina}
                                     onChange={(e) => { setOficina(e.target.value) }}
@@ -126,7 +127,7 @@ function page() {
                                     className="mt-1 w-full rounded-md border-gray-200 shadow-sm sm:text-sm"
                                 />
                             </div>
-                            <div className='mt-4'>
+                            <div className='mt-4 sm:mt-0 sm:col-span-2 md:col-span-1 flex justify-center items-center'>
                                 <button
                                     onClick={() => { modificar() }}
                                     className="text-white py-2 px-4 rounded bg-orange-400 hover:bg-orange-500 shadow hover:shadow-lg font-medium transition transform hover:-translate-y-0.5"
@@ -141,8 +142,8 @@ function page() {
                                 </button>
                             </div>
                         </div>
-
                     </div>
+
                 ) : null}
             </div>
             {showCorrecto && (
