@@ -3,12 +3,12 @@ import React, { useState, useEffect } from "react"
 import { Zoom } from "react-slideshow-image"
 import "react-slideshow-image/dist/styles.css"
 
-const NewModal = (newContent, newTitle, newImg, visible, onClose) => {
+const ContentModal = (newContent, newTitle, newImg, type, visible, onClose) => {
     if (!visible) return null
     return (
         <div className="fixed inset-0 z-10 bg-grey bg-opacity-10 backdrop-blur-sm flex justify-center items-center">
-            <div className="flex flex-col bg-white p-2 rounded-lg h-[80vh] w-[80vw] border border-solid border-gray-300">
-                <div className="flex flex-row min-w-[100%] max-w-[100%] gap-x-2 justify-between items-start">
+            <div className="flex flex-col bg-white p-2 rounded-lg max-h-[80vh] w-[70vw] border border-solid border-gray-300">
+                <div className="flex flex-row w-[100%] gap-x-2 justify-between items-start">
                     <h1 className="text-2xl font-bold p-2">{newTitle}</h1>
                     <button className="p-2" onClick={onClose}>
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
@@ -18,10 +18,12 @@ const NewModal = (newContent, newTitle, newImg, visible, onClose) => {
 
                 </div>
                 <div className='flex flex-col gap-2 overflow-x-auto'>
-                    <div className="flex w-[100%] justify-center">
-                        <img src={newImg} alt="" className="w-[78vw] object-cover rounded-lg" />
+                    <div className="flex flex-col min-w-full max-w-full justify-center items-center" >
+                        <div className={`flex ${type === 1 ? 'md:w-[70%] w-full' : 'md:w-[50%] w-full'} justify-center items-center`}>
+                            <img src={newImg} alt="" className="w-full object-cover rounded-lg" />
+                        </div>
                     </div>
-                    <p>{newContent}</p>
+                    <p className="text-justify p-2">{newContent}</p>
                 </div>
             </div>
         </div>
@@ -29,26 +31,25 @@ const NewModal = (newContent, newTitle, newImg, visible, onClose) => {
 }
 
 const NewCard = ({ key, newTitle, newContent, newImage }) => {
-    const [showNewModal, setShowNewModal] = useState(false);
-
-    const handleOnClose = () => setShowNewModal(false);
-
+    const [showContentModal, setShowContentModal] = useState(false);
+    const handleOnClose = () => setShowContentModal(false);
     return (
-        <div key={key} className="flex flex-col p-2 rounded-lg border border-solid border-gray-300 bg-slate-50">
-            <div className="inset-0 bg-cover bg-center min-h-[100px] max-h-[100px] min-w-[200px] max-w-[200px]">
-                <img className="rounded-lg object-cover max-h-[100%] min-h-[100%] max-w-[100%] min-w-[100%]"
-                    src={newImage} loading="eager" quality={100} alt="" />
+        <>
+            <div key={key} className="flex flex-col md:w-[30%] w-[50%] aspect-[1/.85] p-2 rounded-lg border border-solid border-gray-300 bg-slate-50 cursor-pointer" onClick={() => setShowContentModal(true)}>
+                <div className="rounded-lg bg-cover bg-center w-full">
+                    <img className="rounded-lg object-scale-down"
+                        src={newImage} loading="eager" quality={100} alt="" />
+                </div>
+                <h2 className="text-base text-ellipsis text-left overflow-y-auto h-[30%] my-2 px-1" style={{
+                    scrollbarColor: "whitegrey white",
+                    scrollbarWidth: "thin",
+                    msScrollbarShadowColor: "whitegrey",
+                    msScrollbarTrackShadowColor: "whitegrey",
+                    msScrollbarTrackColor: "whitegrey",
+                }}>{newTitle}</h2>
             </div>
-            <h2 className="text-base text-ellipsis text-left overflow-y-auto min-h-[70px] max-h-[70px] min-w-[200px] max-w-[200px] my-2 px-1" style={{
-                scrollbarColor: "whitegrey white",
-                scrollbarWidth: "thin",
-                msScrollbarShadowColor: "whitegrey",
-                msScrollbarTrackShadowColor: "whitegrey",
-                msScrollbarTrackColor: "whitegrey",
-            }}>{newTitle}</h2>
-            <button className="text-sm border-t border-gray-200" onClick={() => setShowNewModal(true)}>Ver mas</button>
-            {showNewModal && NewModal(newContent, newTitle, newImage, showNewModal, handleOnClose)}
-        </div>
+            {showContentModal && ContentModal(newContent, newTitle, newImage, 2, showContentModal, handleOnClose)}
+        </>
     )
 };
 
@@ -107,7 +108,7 @@ const SlideBanner = () => {
             return (
                 <>
                     <img src={`https://td-g-production.up.railway.app${banners[0].urlImagen}`} className="object-cover min-w-[100%] rounded-lg" loading="eager" alt="" onClick={() => openModal(banners[0])} />
-                    {selectedBanner && NewModal(selectedBanner.contenidoBanner, selectedBanner.nombre, `https://td-g-production.up.railway.app${selectedBanner.urlImagen}`, true, closeModal)}
+                    {selectedBanner && ContentModal(selectedBanner.contenidoBanner, selectedBanner.nombre, `https://td-g-production.up.railway.app${selectedBanner.urlImagen}`, 1, true, closeModal)}
                 </>
             )
         }
@@ -118,12 +119,12 @@ const SlideBanner = () => {
                         <img key={index} src={`https://td-g-production.up.railway.app${banner.urlImagen}`} className="object-cover min-w-[100%]" loading="eager" alt="" onClick={() => openModal(banner)} />
                     ))}
                 </Zoom>
-                {selectedBanner && NewModal(selectedBanner.contenidoBanner, selectedBanner.nombre, `https://td-g-production.up.railway.app${selectedBanner.urlImagen}`, true, closeModal)}
+                {selectedBanner && ContentModal(selectedBanner.contenidoBanner, selectedBanner.nombre, `https://td-g-production.up.railway.app${selectedBanner.urlImagen}`, 1, true, closeModal)}
             </>
         );
     } else {
         return (
-            <img className='w-auto m-4 rounded-lg' src="https://www.politecnicojic.edu.co/images/logo/logo-negro.png" alt="" />
+            <img className='w-[50%] m-4 rounded-lg' src="https://www.politecnicojic.edu.co/images/logo/logo-negro.png" alt="" />
         )
     }
 };
@@ -142,35 +143,30 @@ const SlideNewsCard = () => {
                 console.error('Error en la consulta de noticias:', error);
             }
         };
-
         fetchNews();
     }, []);
 
     if (news.length > 0) {
         return (
-            <div className="flex flex-row justify-center mx-4 px-12 mt-4">
-                <div className="flex flex-row min-h-64 min-h-max justify-left overflow-x-auto gap-x-4"
-                    style={{
-                        scrollbarColor: "whitegrey white",
-                        msScrollbarShadowColor: "whitegrey",
-                        msScrollbarTrackShadowColor: "whitegrey",
-                        msScrollbarTrackColor: "whitegrey",
-                    }}
-                >
-                    {news.map((each, index) => (
-                        <NewCard key={index} newTitle={each.contenidoBanner} newContent={each.nombre} newImage={`https://td-g-production.up.railway.app${each.urlImagen}`} />
-                    ))}
-                </div>
+            <div className="flex flex-row w-full min-h-max justify-start     overflow-x-auto gap-x-4"
+                style={{
+                    scrollbarColor: "whitegrey white",
+                    msScrollbarShadowColor: "whitegrey",
+                    msScrollbarTrackShadowColor: "whitegrey",
+                    msScrollbarTrackColor: "whitegrey",
+                }}>
+                {news.map((each, index) => (
+                    <NewCard key={index} newTitle={each.nombre} newContent={each.contenidoBanner} newImage={`https://td-g-production.up.railway.app${each.urlImagen}`} />
+                ))}
             </div>
         )
     } else {
         return (
-            <div className="flex flex-row justify-center">
+            <div className="text-center">
                 No hay novedades en el momento!
             </div>
         )
     }
-
 }
 
 export { SlideBanner, SlideNewsCard }
